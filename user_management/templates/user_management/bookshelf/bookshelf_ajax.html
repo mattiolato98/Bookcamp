@@ -1,0 +1,87 @@
+<script type="text/javascript">
+    /**
+     * Richiesta Ajax per eliminare un libro dal bookshelf di un utente.
+     * success: Chiama removeBook per rimuovere la riga dall'ambiente grafico.
+     * @param book_pk Chiave primaria del libro che si vuole eliminare dal bookshelf.
+     * @param link_clicked Link cliccato dall'utente.
+     */
+    function ajaxDeleteBook(book_pk, link_clicked) {
+        let $row = link_clicked.closest('.bookshelf-element');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'user_management:ajax-delete-book' %}",
+            data: {
+                'book_primary_key': book_pk,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $row.find('.delete-book-icon').tooltip('dispose');
+                $row.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data) {
+                bookshelfOperationSuccess(data, $row);
+            }
+        });
+    }
+
+    /**
+     * Richiesta Ajax per spostare un libro nel bookshelf da una categoria a un'altra.
+     * success: Chiama removeBook per rimuovere la riga dall'ambiente grafico.
+     * @param book_pk Chiave primaria del libro che si vuole spostare.
+     * @param move_to Stringa rappresentante la categoria in cui spostare il libro.
+     * @param link_clicked Link cliccato dall'utente.
+     */
+    function ajaxMoveBook(book_pk, move_to, link_clicked) {
+        let $row = link_clicked.closest('.bookshelf-element');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'user_management:ajax-move-book' %}",
+            data: {
+                'book_primary_key': book_pk,
+                'move_to': move_to,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $row.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data) {
+                bookshelfOperationSuccess(data, $row);
+            }
+        });
+    }
+
+    /**
+     * Richiesta Ajax per inserire un nuovo libro nel bookshelf.
+     * success: Chiama removeBook per rimuovere la riga dall'ambiente grafico.
+     * @param book_pk Chiave primaria del libro che si vuole aggiungere.
+     * @param move_to Stringa rappresentante la categoria in cui inserire il libro.
+     * @param link_clicked Link cliccato dall'utente.
+     */
+    function ajaxNewBook(book_pk, move_to, link_clicked) {
+        let $row = link_clicked.closest('.bookshelf-element');
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'user_management:ajax-new-book' %}",
+            data: {
+                'book_primary_key': book_pk,
+                'move_to': move_to,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $row.html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data) {
+                bookshelfOperationSuccess(data, $row);
+            }
+        });
+    }
+</script>

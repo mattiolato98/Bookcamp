@@ -1,0 +1,29 @@
+{% extends 'user_management/base_profile_form.html' %}
+
+{% comment %}
+    Pagina per la modifica di un profilo.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Modifica profilo{% endblock %}
+
+{% block form_page_path %}
+    <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">Profilo</a>
+    &nbsp;>&nbsp;
+    Modifica profilo
+{% endblock %}
+{% block form_title %}Modifica i dati del profilo{% endblock %}
+
+{% block form_user_profile_picture %}
+    <div class="media mt-4">
+        <img src="{{ user.profile.picture.url }}" class="rounded-picture-medium align-self-center">
+        <div class="media-body ml-3">
+            <span class="font-5">{{ user.username }}</span> <br>
+            <a href="{% url 'user_management:update-profile-picture' %}" class="site-blue-text font-7 no-decoration">
+                Cambia l'immagine del profilo
+            </a>
+        </div>
+    </div>
+{% endblock %}
+{% block submit_button_value %}Salva le informazioni del profilo{% endblock %}
+{% block submit_button_form_id %}update-profile-crispy-form{% endblock %}
+{% block cancel_button_url %}{% url 'user_management:view-profile' user.pk %}{% endblock %}

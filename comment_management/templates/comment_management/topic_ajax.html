@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    /**
+     * Richiesta Ajax per salvare il like di un utente.
+     * success: Chiama la funzione fillLike per la gestione dell'icona.
+     * @param topic_pk Chiave primaria del topic su cui è stato premuto il tasto like.
+     * @param icon_clicked Icona like cliccata dall'utente.
+     *
+     */
+    function ajaxSaveLike(topic_pk, icon_clicked) {
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'comment_management:ajax-save-like' %}",
+            data: {
+                'topic_primary_key': topic_pk,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(data) {
+                fillLike(data, icon_clicked);
+            }
+        });
+    }
+
+    /**
+     * Richiesta Ajax per salvare il bookmark di un utente.
+     * success: Chiama la funzione fillBookmark per la gestione dell'icona.
+     * @param topic_pk Chiave primaria del topic su cui è stato premuto il tasto bookmark.
+     * @param icon_clicked Icona bookmark cliccata dall'utente.
+     *
+     */
+    function ajaxSaveBookmark(topic_pk, icon_clicked) {
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'comment_management:ajax-save-bookmark' %}",
+            data: {
+                'topic_primary_key': topic_pk,
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(data) {
+                fillBookmark(data, icon_clicked);
+            }
+        });
+    }
+</script>

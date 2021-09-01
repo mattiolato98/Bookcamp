@@ -1,0 +1,21 @@
+{% load comment_filters %}
+
+{% comment %}
+    Template base per la visualizzazione di un testo troncato, con pulsanti per la gestione.
+{% endcomment %}
+
+<div class="text-justify site-text break-word text-box">
+    {% if html %}
+        <span class="text-message font-4">{{ text|truncate_html_chars:chars|safe }}</span>
+    {% else %}
+        <span class="text-message font-4">{{ text|truncatechars:chars }}</span>
+    {% endif %}
+    {% if text|length > chars %}
+        <br>
+        <a class="site-blue-text font-6 cursor-pointer text-show-more">Leggi tutto</a>
+        <a class="site-blue-text font-6 cursor-pointer text-show-less" style="display:none;">Mostra meno</a>
+        <span class="text-hidden-message" style="display: none">
+            {{ text }}
+        </span>
+    {% endif %}
+</div>

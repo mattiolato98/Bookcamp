@@ -1,0 +1,54 @@
+{% extends 'base_full_page_box.html' %}
+
+{% comment %}
+    Pagina per la visualizzazione delle impostazioni di un utente.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Impostazioni{% endblock %}
+
+{% block first_column_classes %}unnecessary-column{% endblock %}
+
+{% block second_column_content %}
+    <div class="mb-5">
+        <h6 class="font-5">
+            <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">Profilo</a>
+            &nbsp;>&nbsp;
+            Impostazioni</h6>
+        <h5 class="font-6">Impostazioni</h5>
+    </div>
+    <div>
+        <a href="{% url 'user_management:user-password' %}"
+           class="site-blue-text font-6">Modifica password</a> <br>
+        <span class="text-muted">
+            Modifica la tua password.
+        </span>
+    </div>
+    <hr>
+    <div>
+        {% if user.has_profile %}
+            <a href="{% url 'user_management:delete-profile' %}" class="site-red-text font-6">Disabilita profilo</a> <br>
+            <span class="text-muted">
+                Tutti gli utenti che ti seguono perderanno il follow e non potranno più trovarti e vedere le tue
+                informazioni. Non potrai più vedere i tuoi contenuti dal tuo profilo e le tue informazioni
+                personali verranno perse.
+            </span>
+        {% else %}
+            <a href="{% url 'user_management:create-profile' %}" class="site-blue-text font-6">Crea profilo</a> <br>
+            <span class="text-muted">
+                Potrai vedere i tuoi contenuti pubblicati, gli elementi salvati o che ti piacciono di altri utenti
+                e i profili che segui. Potrai salvare i libri nel tuo bookshelf e gli altri utenti potranno seguirti.
+            </span>
+        {% endif %}
+    </div>
+    <hr>
+    <div>
+        <a href="{% url 'user_management:delete-user' %}"
+           class="site-red-text font-6">Cancella definitivamente il mio account</a> <br>
+        <span class="text-muted">
+            Attenzione! Tutte le tue informazioni e i tuoi contenuti pubblicati verranno
+            eliminati e non sarà più possibile recuperarli.
+        </span>
+    </div>
+{% endblock %}
+
+{% block third_column_classes %}unnecessary-column{% endblock %}

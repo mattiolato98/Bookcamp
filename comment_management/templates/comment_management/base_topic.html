@@ -1,0 +1,139 @@
+{% load comment_filters %}
+{% load static %}
+
+{% comment %}
+    Template base per la visualizzazione di un topic.
+{% endcomment %}
+
+<div class="row comment-row">
+    {% if not is_delete %}
+        <div class="site-col col">
+            <div class="media">
+                {% if topic.user_owner.has_profile and topic.user_owner.profile.picture %}
+                    <a href="{% url 'user_management:view-profile' topic.user_owner.pk %}">
+                        <img src="{{ topic.user_owner.profile.picture.url }}"
+                             class="align-self-center rounded-picture-medium" alt="">
+                    </a>
+                {% endif %}
+                <div class="sm-only text-muted media-body ml-3">
+                    <a class="no-decoration flat-link" href="{% url 'user_management:view-profile' topic.user_owner.pk %}">
+                        <span class="font-7 break-word">{{ topic.user_owner.username }}</span>
+                    </a>
+                    <br>
+                    {% if topic.user_owner.has_profile %}
+                        <span class="font-4">{{ topic.user_owner.profile.get_name }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+    <div class="col-xl-9 col-lg-6 col-12 d-flex justify-content-between">
+        <div>
+            <div>
+                <span class="font-4 text-muted">Pubblicato {{ topic.creation_date_time|timesince }} fa</span>
+                {% if show_book %}
+                    <a class="site-link-light link-decorated" href="{% url 'view-public-book' book.pk %}">
+                        <span class="font-5">
+                            in {{ book.title|truncatewords:6 }} di {{ book.authors_str|truncatewords:5 }}
+                        </span>
+                    </a>
+                {% endif %}
+            </div>
+            <h5 class="font-7 break-word">{{ topic.title }}</h5>
+
+        </div>
+        {% if not is_delete %}
+            <div>
+                <i class="fas fa-ellipsis-h site-small-icon"
+                   data-toggle="dropdown"></i>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                    {% if topic.user_owner == user %}
+                        <a class="dropdown-item cursor-pointer"
+                           href="{% url 'comment_management:update-topic' topic.pk %}">
+                            <i class="fas fa-pencil-alt mr-3"></i>Modifica
+                        </a>
+                        <a class="dropdown-item cursor-pointer site-red-text dropdown-item-red"
+                           href="{% url 'comment_management:delete-topic' topic.pk %}">
+                            <i class="fas fa-trash-alt mr-3"></i>Elimina
+                        </a>
+                    {% else %}
+                        <a class="dropdown-item cursor-pointer" href="{% url 'user_management:report' %}">
+                            Report &nbsp;<i class="fas fa-bullhorn"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% if not is_delete %}
+        <div class="col unnecessary-column"></div>
+    {% endif %}
+</div>
+
+<div class="row comment-row mt-lg-3">
+    {% if not is_delete %}
+        <div class="col site-col">
+            <div class="lg-only text-muted">
+                <a class="no-decoration flat-link" href="{% url 'user_management:view-profile' topic.user_owner.pk %}">
+                    <span class="font-7 break-word">{{ topic.user_owner.username }}</span>
+                </a>
+                <br>
+                {% if topic.user_owner.has_profile %}
+                    <span class="font-4">{{ topic.user_owner.profile.get_name }}</span>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="site-col col-xl-9 col-lg-6 col-12">
+        {% include 'comment_management/base_truncated_text.html' with text=topic.message html=True chars=1100 %}
+    </div>
+    {% if not is_delete %}
+        <div class="col unnecessary-column"></div>
+    {% endif %}
+</div>
+
+<div class="row comment-row mt-3 d-flex align-items-center">
+    {% if not is_delete %}
+        <div class="col unnecessary-column"></div>
+    {% endif %}
+    <div class="site-col col-xl-9 col-lg-6 col-12">
+        <span class="text-muted font-5">
+            <span class="number-of-likes">{{ topic.likes_count }}</span> Mi piace,
+            {% with comments_count=topic.comments_count %}
+                {{ comments_count }}
+                <a class="flat-link" href="{% url 'comment_management:view-topic' topic.pk %}">
+                {% if comments_count == 1 %}
+                    Commento
+                {% else %}
+                    Commenti
+                {% endif %}
+            </a>
+            {% endwith %}
+        </span>
+    </div>
+    {% if not is_delete %}
+        <div class="col d-flex align-items-center justify-content-between">
+            <i data-post-id="{{ topic.pk }}" class="far fa-heart site-md-icon like-icon
+                {% if topic|user_likes_topic:user %}
+                    like-selected
+                {% else %}
+                    like-deselected
+                {% endif %}
+                " data-toggle="tooltip" data-placement="top" title="Mi piace"></i>
+            <i data-post-id="{{ topic.pk }}" class="far fa-bookmark site-md-icon bookmark-icon
+                     {% if topic|user_saved_topic:user %}
+                        bookmark-selected
+                     {% else %}
+                        bookmark-deselected
+                     {% endif %}
+                    " data-toggle="tooltip" data-placement="top" title="Salva"></i>
+            {% if not is_comment %}
+                <a href="{% url 'comment_management:view-topic' topic.pk %}" class="site-link">
+                    <i class="far fa-comment site-md-icon add-comment-icon"
+                       data-toggle="tooltip" data-placement="top" title="Commenta"></i>
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

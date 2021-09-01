@@ -1,0 +1,27 @@
+{% extends 'base_delete.html' %}
+{% load static %}
+
+{% comment %}
+    Pagina di eliminazione di un topic.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Elimina Topic{% endblock %}
+
+{% block delete_page_path %}
+    <a class="site-link" href="{% url 'view-public-book' topic.book.pk %}">{{ topic.book.title|truncatewords:6 }}</a>
+    &nbsp;>&nbsp;
+    <a class="site-link" href="{% url 'comment_management:view-topic' topic.pk %}">Topic</a>
+    &nbsp;>&nbsp;
+    Elimina topic{% endblock %}
+{% block delete_object_title %}Elimina il tuo Topic{% endblock %}
+{% block delete_object_subtitle %}Informazioni che verranno perse definitivamente{% endblock %}
+
+{% block delete_object_information %}
+    {% include 'comment_management/base_topic.html' with topic=object is_delete=True %}
+{% endblock %}
+{% block cancel_button_url %}{% url 'comment_management:view-topic' object.pk %}{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/base_topic.js' %}"></script>
+    <script src="{% static 'js/show_more_less.js' %}"></script>
+{% endblock %}

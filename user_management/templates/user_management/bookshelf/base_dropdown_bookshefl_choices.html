@@ -1,0 +1,19 @@
+{% comment %}
+    Template base per la tendina di opzioni di categorie del bookshelf.
+{% endcomment %}
+
+{% if not type == "READING" %}
+    <a data-post-id="{{ book.pk }}" class="dropdown-item cursor-pointer {{ action }}-book-reading">
+        In lettura &nbsp;&#128214;
+    </a>
+{% endif %}
+{% if not type == "READ" %}
+    <a data-post-id="{{ book.pk }}" class="dropdown-item cursor-pointer {{ action }}-book-read">
+        Letto &nbsp;<i class="fas fa-check"></i>
+    </a>
+{% endif %}
+{% if not type == "MUSTREAD" %}
+    <a data-post-id="{{ book.pk }}" class="dropdown-item cursor-pointer {{ action }}-book-must-read">
+        Da leggere &nbsp;&#128355;
+    </a>
+{% endif %}

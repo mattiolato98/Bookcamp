@@ -1,0 +1,24 @@
+{% extends 'base_full_page_box.html' %}
+
+{% comment %}
+    Pagina per la visualizzazione della lista di profili seguiti.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Profili seguiti{% endblock %}
+
+{% block first_column_classes %}unnecessary-column{% endblock %}
+{% block second_column_content %}
+    <div class="mb-5">
+        <h6 class="font-5">
+            <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">Profilo</a>
+            &nbsp;>&nbsp;
+            Profili seguiti</h6>
+        <h5 class="font-6">Profili che segui</h5>
+    </div>
+    {% if object_list.count == 0 %}
+        <span class="font-5 text-muted">Non segui ancora nessuno.</span>
+    {% else %}
+        {% include 'user_management/base_profiles_list.html' with profiles=user.get_followed_profiles %}
+    {% endif %}
+{% endblock %}
+{% block third_column_classes %}unnecessary-column{% endblock %}

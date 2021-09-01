@@ -1,0 +1,19 @@
+{% comment %}
+    Template base di una progress bar con un voto da 0 a 100.
+{% endcomment %}
+
+<div class="progress-container {{ progress_container_custom_class }}">
+    <div class="progress">
+        <div class="progress-bar
+            {% if vote < 60 %}
+                bg-danger
+            {% else %}
+                site-light-blue-bg
+            {% endif %}
+            " role="progressbar" style="width: {{ vote }}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        </div>
+    </div>
+    <div class="font-6 d-flex justify-content-center responsive-text">
+        <span class="progress-bar-vote">{{ vote }}</span>&nbsp;su 100
+    </div>
+</div>

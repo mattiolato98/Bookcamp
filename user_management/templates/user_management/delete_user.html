@@ -1,0 +1,31 @@
+{% extends 'base_delete.html' %}
+
+{% comment %}
+    Pagina per l'eliminazione di un utente.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Elimina account{% endblock %}
+
+{% block delete_page_path %}
+    <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">Profilo</a>
+    &nbsp;>&nbsp;
+    <a class="site-link" href="{% url 'user_management:user-settings' %}">Impostazioni</a>
+    &nbsp;>&nbsp;
+    Elimina definitivamente account
+{% endblock %}
+{% block delete_object_title %}Elimina definitivamente il tuo account{% endblock %}
+{% block delete_object_subtitle %}Sei sicuro di voler abbandonare la piattaforma?{% endblock %}
+
+{% block delete_object_information %}
+    <span class="font-5 mt-3">
+        Ci dispiace molto doverti salutare qua. Speriamo vivamente tu abbia tratto il massimo dal dialogo
+        con le altre persone e abbia imparato qualcosa di nuovo.
+    </span>
+    <br>
+    <hr>
+    <span class="text-muted font-5">
+    Perderai tutte le tue informazioni, i tuoi contenuti pubblicati verranno
+    eliminati e non sarà più possibile recuperarli.
+    </span>
+{% endblock %}
+{% block cancel_button_url %}{% url 'user_management:user-settings' %}{% endblock %}

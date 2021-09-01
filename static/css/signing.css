@@ -1,0 +1,84 @@
+html,body {
+    font-weight: 500;
+    height: 100%;
+}
+
+#site-main-page {
+    height: 100%;
+    margin: 0 !important;
+}
+
+#background-column {
+    height: inherit;
+    background: url("/static/img/bg.jpg") no-repeat center center;
+    background-size: cover;
+    opacity: 0.8;
+}
+
+#signing-form {
+    width: 100%;
+    max-width: 500px;
+}
+
+#signing-column {
+    background-color: #93827F;
+}
+
+.site-link {
+    color: #242424;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.site-link:hover {
+    color: #242424;
+}
+
+.light-link {
+    color: #e8e8e8;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.light-link:hover {
+    color: #e8e8e8;
+}
+
+.form-text {
+    color: #242424 !important;
+}
+
+.form-control {
+    color: #e8e8e8;
+    font-weight: 500;
+    border-bottom-color: #e8e8e8;
+}
+
+.form-control:focus {
+    color: #e8e8e8;
+    border-bottom-color: #525252 !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e8e8e8;
+}
+
+@media (max-width: 768px) {
+    #background-column {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    #signing-column {
+        margin-bottom: 0;
+    }
+}

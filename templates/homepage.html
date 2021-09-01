@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+    Pagina Homepage.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Homepage{% endblock %}
+
+{% block header %}
+    <div id="homepage-background" class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title">Homepage</span>
+    </div>
+{% endblock %}
+{% block content %}
+    {% for topic in object_list %}
+        <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75 comment-box">
+            {% include 'comment_management/base_topic.html' with show_book=True book=topic.book %}
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/base_topic.js' %}"></script>
+    <script src="{% static 'js/show_more_less.js' %}"></script>
+    {% include 'comment_management/topic_ajax.html' %}
+{% endblock %}

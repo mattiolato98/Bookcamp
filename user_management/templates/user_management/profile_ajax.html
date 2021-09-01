@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    /**
+     * Richiesta Ajax per salvare il follow.
+     * success: chiama la funzione changeFollow per la gestione del pulsante.
+     */
+    function ajaxSaveFollow() {
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'user_management:ajax-save-follow' %}",
+            data: {
+                'user': {{ user_for_profile.pk }},
+            },
+            headers:{
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(data) {
+                changeFollow(data);
+            }
+        });
+    }
+</script>

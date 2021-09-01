@@ -1,0 +1,26 @@
+{% extends 'base_full_page_box.html' %}
+{% load crispy_forms_tags %}
+
+{% comment %}
+    Template base contenente il form di un profilo.
+{% endcomment %}
+
+{% block first_column_classes %}unnecessary-column{% endblock %}
+{% block second_column_content %}
+    <div class="mb-5">
+        <h6 class="font-5">{% block form_page_path %}{% endblock %}</h6>
+        <h5 class="font-6">{% block form_title %}{% endblock %}</h5>
+        {% block form_user_profile_picture %}{% endblock %}
+    </div>
+    {% crispy form %}
+    <div class="d-flex column-flex align-items-start mobile-column-center mt-4 mb-2">
+        <div class="d-flex align-items-center justify-content-between site-flex-buttons">
+            <input class="btn site-btn w-100" type="submit" form="{% block submit_button_form_id %}{% endblock %}"
+                   value="{% block submit_button_value %}{% endblock %}">
+            <a class="site-link font-6 ml-3 mt-3 mt-lg-0" href="{% block cancel_button_url %}{% endblock %}">
+                Annulla
+            </a>
+        </div>
+    </div>
+{% endblock %}
+{% block third_column_classes %}unnecessary-column{% endblock %}

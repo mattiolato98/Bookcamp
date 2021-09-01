@@ -1,0 +1,99 @@
+{% extends 'base_full_page_box.html' %}
+{% load crispy_forms_tags %}
+{% load book_filters %}
+
+{% comment %}
+    Pagina per la modifica delle informazioni di un libro nel proprio bookshelf.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Modifica Bookshelf{% endblock %}
+
+{% block first_column_classes %}site-col{% endblock %}
+{% block first_column_content %}
+    <div class="media d-flex align-items-center mr-3">
+        <a href="{% url 'view-private-book' book.pk %}" class="no-decoration">
+            <img class="picture-medium align-self-center" src="{{ book.cover_image_file.url }}" alt="">
+        </a>
+        <div class="media-body ml-3">
+            <span class="font-6 md-only-text">
+                {{ book.title|truncatewords:10 }}
+            </span>
+            <span class="font-6 sm-only-text">
+                {{ book.title|truncatechars:50 }}
+            </span>
+            {% if book.authors_count > 0 %}
+                <br>
+                <span class="font-4">di {{ book.authors_str|truncatewords:6 }}</span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block second_column_content %}
+    <div class="mb-5">
+        <h6 class="font-5">
+            <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">
+                Profilo
+            </a>
+            &nbsp;>&nbsp;
+            <a class="site-link" href="{% url 'user_management:bookshelf' user.pk %}">
+                Bookshelf
+            </a>
+            &nbsp;>&nbsp;
+            <a href="{% url 'view-private-book' book.pk %}" class="site-link">
+                Informazioni private libro
+            </a>
+            &nbsp;>&nbsp; Modifica informazioni libro
+        </h6>
+        <h5 class="font-6 mb-0">Modifica informazioni del libro</h5>
+        <span class="text-muted font-5">{{ error_message }}</span>
+    </div>
+    <div>
+        {% crispy form %}
+        {% with vote=book|get_user_book_rating:user %}
+            {% if vote is not None %}
+                {% include 'base_progress_bar.html' %}
+            {% else %}
+                {% include 'base_progress_bar.html' with progress_container_custom_class='hidden' %}
+            {% endif %}
+        {% endwith %}
+        <div class="mt-4 mb-2 site-flex-buttons">
+            <input class="btn site-btn mb-3 mb-lg-0" type="submit" form="update-book-info-crispy-form" value="Salva modifiche">
+            <a class="site-link font-6 ml-3" href="{% url 'view-private-book' book.pk %}">
+                Annulla
+            </a>
+        </div>
+    </div>
+{% endblock %}
+{% block third_column_classes %}unnecessary-column{% endblock %}
+
+{% block extra_javascript %}
+    <script>
+        $(function () {
+           $('#id_rating').on('change keyup', function () {
+              if ($(this).val() > 100)
+                  $(this).val(100);
+              if ($(this).val() < 0)
+                  $(this).val(0);
+
+              if ($(this).val().length === 0) {
+                $('.progress-container').hide();
+              } else {
+                  const progress_bar = $('.progress-bar');
+
+                  progress_bar.width($(this).val() + '%');
+                  $('.progress-bar-vote').text($(this).val());
+                  $('.progress-container').show();
+
+                  if ($(this).val() < 60) {
+                      progress_bar.removeClass('site-light-blue-bg');
+                      progress_bar.addClass('bg-danger');
+                  } else {
+                      progress_bar.removeClass('bg-danger');
+                      progress_bar.addClass('site-light-blue-bg');
+                  }
+              }
+           });
+        });
+    </script>
+{% endblock %}

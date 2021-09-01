@@ -1,0 +1,62 @@
+{% comment %}
+    Template base per la visualizzazione di un commento.
+{% endcomment %}
+
+<div class="row">
+    <div class="site-col col-12 d-flex justify-content-between">
+        <div>
+            {% if not is_delete %}
+                <div class="media">
+                    {% if comment.user_owner.has_profile and comment.user_owner.profile.picture %}
+                        <a href="{% url 'user_management:view-profile' comment.user_owner.pk %}">
+                            <img src="{{ comment.user_owner.profile.picture.url }}"
+                                 class="align-self-center rounded-picture-small">
+                        </a>
+                    {% endif %}
+                    <div class="media-body ml-3">
+                        <a class="no-decoration flat-link" href="{% url 'user_management:view-profile' comment.user_owner.pk %}">
+                            <span class="text-muted font-6 mr-3">{{ comment.user_owner.username }}</span>
+                        </a> <br>
+                        <span class="font-4 font-size-90 text-muted">{{ comment.creation_date_time|timesince }} fa</span>
+                    </div>
+                </div>
+            {% endif %}
+{#            <div class="mt-3">#}
+{#                {% include 'comment_management/base_truncated_text.html' with text=comment.message chars=1100 %}#}
+{#            </div>#}
+        </div>
+        <div>
+            {% if not is_delete %}
+                <i class="fas fa-ellipsis-h site-icon"
+                   data-toggle="dropdown"></i>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                    {% if comment.user_owner != user %}
+                        <a class="dropdown-item cursor-pointer" href="{% url 'user_management:report' %}">
+                            Report &nbsp;<i class="fas fa-bullhorn"></i>
+                        </a>
+                    {% else %}
+                        <a class="dropdown-item cursor-pointer"
+                           href="{% url 'comment_management:delete-comment' comment.pk %}"> Elimina</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="row mt-lg-3 mr-lg-3">
+    <div class="col d-flex justify-content-between align-items-end">
+        {% include 'comment_management/base_truncated_text.html' with text=comment.message chars=1100 %}
+    </div>
+{#    <div class="col-auto d-flex justify-content-end align-items-end">#}
+{#         <i class="far fa-heart"></i>#}
+{#    </div>#}
+</div>
+{% if is_profile %}
+    <div class="row">
+        <div class="col site-col mt-3">
+            <a class="site-link-light link-decorated" href="{% url 'comment_management:view-topic' topic.pk %}">
+                <span class="font-5"> vedi Topic </span>
+            </a>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load book_filters %}
+{% load crispy_forms_tags %}
+
+
+{% comment %}
+    Pagina per la visualizzazione di un libro e dei relativi topic.
+{% endcomment %}
+
+{% block title %}{{ block.super }} {{ book.title }}{% endblock %}
+
+{% block header %}
+    <div id="view-book-header-background" class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title p-2">
+            {% if book.title %}
+                {{ book.title|truncatewords:10 }}
+            {% endif %}
+            {% if book.authors_count > 0 %}
+                di {{ book.authors_str|truncatewords:4 }}
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid p-2 mb-3 bg-white w-100 site-box shadow-lg">
+        <div id="view-box-information" class="row" style="display:none;">
+            <div class="col-lg-auto col-12 d-flex align-items-start justify-content-center p-4">
+                <div class="d-flex align-items-center justify-content-center">
+                    {% if book.cover_image_file_is_default %}
+                        <img src="{{ book.cover_image_file.url }}" class="img-fluid cover-img picture-big">
+                    {% else %}
+                        <img src="{{ book.cover_image_file.url }}" class="img-fluid cover-img">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col p-4">
+                {% include 'book_management/base_book_metadata_inline.html' %}
+            </div>
+            <div class="col-lg-6 col-12 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="font-7">Topic</h6>
+                    <span class="font-7 text-muted">{{ book.topics_count }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="font-7">Commenti totali</h6>
+                    <span class="font-7 text-muted">{{ book.comments_count }}</span>
+                </div>
+                <hr>
+                {% if user.has_profile %}
+                    {% if book|user_saved_book:user %}
+                        {% if book|user_rated_book:user %}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                {% with vote=book|get_user_book_rating:user %}
+                                    <h6 class="font-7">Il tuo voto</h6>
+                                    {% include 'base_progress_bar.html' with progress_container_custom_class='w-25' %}
+                                {% endwith %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                {% with vote=book.average_rating %}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        {% if vote is None %}
+                            <h6 class="font-7">Ancora nessun voto</h6>
+                        {% else %}
+                            <div>
+                                <h6 class="font-7 mb-0">Valutazione media</h6>
+                                <span class="font-5 text-muted mb-2">
+                                    {{ book.number_of_ratings }}
+                                    {% if book.number_of_ratings == 1 %}voto{% else %}voti{% endif %}
+                                </span>
+                            </div>
+                            {% include 'base_progress_bar.html' with progress_container_custom_class='w-25' %}
+                        {% endif %}
+                    </div>
+                {% endwith %}
+                {% with number=book.people_reading_count %}
+                    {% if number > 0 or book.is_top_5 %}
+                        <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                            {% if number > 0 %}
+                                <a href="#" class="people-reading-badge p-1 d-flex
+                                    align-items-center font-size-90 no-decoration site-link">
+                                    &nbsp;<i class="fas fa-users"></i>&nbsp;&nbsp;
+                                    <span class="font-6">
+                                        {{ number }}
+                                        {% if number == 1 %} persona lo sta {% else %} persone lo stanno{% endif %} leggendo
+                                    </span>&nbsp;
+                                </a>
+                            {% endif %}
+                            {% if book.is_top_5 %}
+                                <span class="badge badge-danger p-1 top-badge">Top 5</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <div class="d-flex justify-content-between align-items-center mb-3 bookshelf-element">
+                    {% if user.is_authenticated %}
+                        {% if user.has_profile %}
+                            {% if book|user_saved_book:user %}
+                                <h6 class="font-6 text-success mb-0">
+                                    <i class="fas fa-check"></i> &nbsp;{{ book|get_user_book_status:user }}
+                                </h6>
+                                <a href="{% url 'view-private-book' book.pk %}" class="site-blue-text font-6">
+                                    Vedi nel bookshelf
+                                </a>
+                            {% else %}
+                                <h6 class="font-7 site-blue-text cursor-pointer" data-toggle="dropdown">
+                                    + Aggiungi ai tuoi libri
+                                </h6>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                                    {% include 'user_management/bookshelf/base_dropdown_bookshefl_choices.html' with action="new" %}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'user_management:create-profile' %}" class="site-blue-text font-7">
+                                Completa il profilo per poterlo inserire nel tuo bookshelf
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-center cursor-pointer w-100 expand-box-data mt-2">
+            <h4 class="font-7 box-data-hide">
+                Informazioni libro
+                <i class="fas fa-caret-down"></i>
+            </h4>
+            <i class="fas fa-caret-up box-data-show site-big-icon" style="display: none"></i>
+        </div>
+    </div>
+    <div class="container-fluid p-4 mb-2 w-75 mt-4">
+        <div class="row d-flex align-items-center justify-content-end">
+            <a class="btn site-btn shadow" href="{% url 'comment_management:new-topic' book.pk %}">
+                <i class="fas fa-plus"></i> <span class="font-7"> Nuovo Topic</span>
+            </a>
+            {#            <a class="btn site-btn-yellow site-btn-col ml-2" href="{% url 'comment_management:new-topic' book.pk %}">#}
+            {#               <span class="font-7">Ordina per </span> <i class="fas fa-sort"></i>#}
+            {#            </a>#}
+        </div>
+    </div>
+    {% for topic in object_list %}
+        <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75 comment-box">
+            {% include 'comment_management/base_topic.html' %}
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/view_book.js' %}"></script>
+    <script src="{% static 'js/base_topic.js' %}"></script>
+    <script src="{% static 'js/show_more_less.js' %}"></script>
+    <script src="{% static 'js/update_bookshelf.js' %}"></script>
+    {% include 'comment_management/topic_ajax.html' %}
+    {% include 'user_management/bookshelf/bookshelf_ajax.html' %}
+{% endblock %}

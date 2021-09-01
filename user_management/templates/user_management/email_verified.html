@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% comment %}
+    Pagina indicante la verifica della propria mail avvenuta con successo.
+{% endcomment %}
+
+{% block extra_css %}
+    <style type="text/css">
+        html,body {
+            height: 100% !important;
+            overflow: hidden;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}{{ block.super }} Email verifcata con successo{% endblock %}
+
+{% block header %}
+    <div id="welcome-page-background" class="d-flex justify-content-center align-items-center column-flex">
+        <div class="row">
+            <div class="col site-col p-4">
+                <h3 class="font-7 logo-font big-text mb-3 color-white-mobile">Stai per atterrare al campo base.</h3>
+                <h5 class="font-7 text-muted color-white-mobile">
+                    La tua email è stata verificata con successo. Entra in
+                    <a class="site-blue-text font-7 site-light-blue-text-mobile" href="{% url 'home' %}">bookcamp</a>.
+                </h5>
+            </div>
+        </div>
+    </div>
+{% endblock %}

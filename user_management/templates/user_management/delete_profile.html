@@ -1,0 +1,49 @@
+{% extends 'base_delete.html' %}
+
+{% comment %}
+    Pagina per l'eliminazione di un profilo.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Disabilita profilo{% endblock %}
+
+{% block delete_page_path %}
+    <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">Profilo</a>
+    &nbsp;>&nbsp;
+    <a class="site-link" href="{% url 'user_management:user-settings' %}">Impostazioni</a>
+    &nbsp;>&nbsp;
+    Disabilita profilo
+{% endblock %}
+{% block delete_object_title %}Disabilita il tuo profilo{% endblock %}
+{% block delete_object_subtitle %}Informazioni che verranno perse definitivamente{% endblock %}
+{% block delete_object_information %}
+    <div class="d-flex justify-content-start align-items-center flex-wrap">
+        <div>
+            <img src="{{ user.profile.picture.url }}" class="rounded-picture-extra-big">
+        </div>
+        <div class="ml-lg-3">
+            <div class="mt-3">
+                <span class="font-6">Nome: </span>
+                <span class="font-4">{{ user.profile.first_name }}</span>
+            </div>
+            <div>
+                <span class="font-6">Cognome: </span>
+                <span class="font-4">{{ user.profile.last_name }}</span>
+            </div>
+            {% if user.profile.description %}
+                <div>
+                    <span class="font-6">Descrizione: </span>
+                    <span class="font-4">{{ user.profile.description }}</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <div class="mt-4">
+        <span class="text-muted font-5">
+            Tutti gli utenti che ti seguono perderanno il follow e non potranno più trovarti e vedere le tue
+            informazioni. Non potrai più vedere i tuoi contenuti dal tuo profilo e le tue informazioni
+            personali verranno perse. Il tuo bookshelf verrà svuotato.
+        </span>
+    </div>
+{% endblock %}
+{% block cancel_button_url %}{% url 'user_management:user-settings' %}{% endblock %}

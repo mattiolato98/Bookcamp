@@ -1,0 +1,20 @@
+{% extends 'user_management/base_profile_form.html' %}
+
+{% comment %}
+    Pagina per la modifica dell'immagine di un profilo.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Immagine del profilo{% endblock %}
+
+{% block form_page_path %}
+    <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">Profilo</a>
+    &nbsp;>&nbsp;
+    <a class="site-link" href="{% url 'user_management:update-profile' %}">Modifica profilo</a>
+    &nbsp;>&nbsp;
+    Immagine del profilo
+{% endblock %}
+
+{% block form_title %}Aggiorna l'immagine del profilo{% endblock %}
+{% block submit_button_value %}Salva immagine{% endblock %}
+{% block submit_button_form_id %}update-profile-picture-crispy-form{% endblock %}
+{% block cancel_button_url %}{% url 'user_management:view-profile' user.pk %}{% endblock %}

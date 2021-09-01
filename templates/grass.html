@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+    Pagina Statistiche Globali.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Grass{% endblock %}
+
+{% block header %}
+    <div id="grass-background" class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title p-2">
+            Ti diamo il benvenuto in Grass<br>
+            Sdraiati sul prato
+        </span>
+    </div>
+    <div class="w-100 p-4 bg-white shadow-lg mt-3 mb-3">
+        <div class="row">
+            <div class="col unnecessary-column"></div>
+            <div class="col-12 col-lg-9 d-flex align-items-start justify-content-center column-flex">
+                <div class="mb-3">
+                    <h2>Cos'è Grass?</h2>
+                    <p>
+                        <span class="font-6">Grass</span> è un nuovo modo di creare gruppi di lettura.
+                    </p>
+                    <p>
+                        Potrai creare gruppi di lettura e scegliere i libri da leggere ogni mese con i tuoi amici,
+                        i tuoi collaboratori o semplicemente con chi deciderà di unirsi a te.
+                        <br>
+                        Oppure potrai unirti a gruppi di lettura esistenti e scegliere di volta in volta se partecipare
+                        alla lettura proposta.
+                    </p>
+                    <p>
+                        Grazie agli strumenti di <span class="font-6">Bookcamp</span> potrai facilmente scegliere un
+                        libro e condividere i tuoi pensieri con i partecipanti, godendo anche degli strumenti esclusivi
+                        per i gruppi di lettura.
+                    </p>
+                    <p class="font-6">
+                        Sdraiati sul prato e preparati a condividere.
+                    </p>
+                </div>
+                <div>
+                    <h2>Cos'è un gruppo di lettura?</h2>
+                    <p>
+                        Un <span class="font-6">gruppo di lettura</span> è un insieme di lettori che decidono di
+                        leggere contemporaneamente e privatamente uno stesso libro, condividendo pensieri e
+                        riflessioni durante, o al termine, del percorso.
+                    </p>
+                    <p>
+                        Il <span class="font-6">moderatore</span> del gruppo decide il libro da leggere, autonomamente
+                        o attraverso le votazioni dei componenti, e fissa alcune regole generali.
+                    </p>
+                    <p>
+                        Ogni <span class="font-6">componente</span> legge il libro nei modi e nei tempi che predilige.
+                        Dopodiché condivide le proprie riflessioni con il gruppo, durante la lettura o al termine a
+                        seconda delle scelte del moderatore, oppure si limita a leggere le riflessioni
+                        delle altre persone.
+                    </p>
+                </div>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+    <div class="row w-100 coming-soon d-flex justify-content-center align-items-center p-2 break-word">
+        <span class="display-1 text-white font-9 text-center display-font letter-spacing-2">
+            <span class="site-blue-text">COMING SOON</span> <br>
+            <span class="site-yellow-text">COMING SOON</span> <br>
+            <span class="site-red-text">COMING SOON</span> <br>
+        </span>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <style type="text/css">
+        #site-main-page {
+            margin: 0 !important;
+        }
+    </style>
+{% endblock %}

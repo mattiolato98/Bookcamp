@@ -1,0 +1,60 @@
+{% comment %}
+    Template che mostra i metadati di un libro in colonna.
+{% endcomment %}
+
+<div class="row d-flex align-items-center justify-content-between column-flex mb-3">
+    <h5 class="font-7 text-center">Titolo</h5>
+    <span class="text-muted font-6 text-center">
+        {% if book.title %}
+            {{ book.title }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+</div>
+<div class="row d-flex align-items-center justify-c ontent-between column-flex mb-3">
+    <h5 class="font-7 text-center">
+        {% if book.authors_count > 1 %}
+            Autori
+        {% else %}
+            Autore
+        {% endif %}
+    </h5>
+    <span class="text-muted font-6 text-center">
+        {% if book.authors_count > 0 %}
+            {{ book.authors_str }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+</div>
+<div class="row d-flex align-items-center justify-content-between column-flex mb-3">
+    <h5 class="font-7 text-center">Editore</h5>
+    <span class="text-muted font-6 text-center">
+        {% if book.publisher %}
+            {{ book.publisher }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+</div>
+<div class="row d-flex align-items-center justify-content-between column-flex mb-3">
+    <h5 class="font-7 text-center">Anno di pubblicazione</h5>
+    <span class="text-muted font-6 text-center">
+        {% if book.year %}
+            {{ book.year }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+</div>
+<div class="row d-flex align-items-center justify-content-between column-flex mb-3">
+    <h5 class="font-7 text-center">Lingua</h5>
+    <span class="text-muted font-6 text-center">
+        {% if book.language %}
+            {{ book.language }}
+        {% else %}
+            -
+        {% endif %}
+    </span>
+</div>

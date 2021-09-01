@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    /**
+     * Richiesta Ajax per scaricare i dati del libro cercato.
+     * success: chiama la funzione per il riempimento della pagina con i dati scaricati.
+     * @param {String} isbn Codice ISBN del libro di cui scaricare i dati.
+     */
+    function ajaxSearchBook(isbn) {
+        let search_button = $('#new-book-search-button');
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'book_management:ajax-search-book' %}",
+            data: {
+                'isbn_code': isbn,
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                search_button.hide();
+                $('#new-book-loading-icon').html(
+                    '<div class="spinner-border mt-2" role="status"><span class="sr-only">Loading...</span></div>');
+            },
+            success: function(data) {
+                $('.spinner-border').hide();
+                search_button.show();
+                fillBookData(data);
+            },
+            error: function(data) {
+                $('.spinner-border').hide();
+                search_button.show();
+                fillBookDataError();
+            }
+        });
+    }
+</script>

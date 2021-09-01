@@ -1,0 +1,34 @@
+<script type="text/javascript">
+    /**
+     * Richiesta Ajax per il controllo dello username già esistente.
+     * success: se lo username esiste già mostra un errore all'utente, altrimento rimuove il messaggio di errore
+     * se era presente.
+     */
+    $('#id_username').on('change', function () {
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'user_management:ajax-check-username-exists' %}",
+            data: {
+                'username': $(this).val(),
+            },
+            dataType: 'json',
+            success: function(data) {
+                let username_field = $('#id_username');
+
+                if (data.exists) {
+                    username_field.css('border-color', "#dc3545");
+                    if (!$('#username-exists-error').length) {
+                        username_field.after(
+                            '<span id="username-exists-error" class="text-danger font-7 font-size-80">' +
+                            'Un utente con questo nome è già presente.' +
+                            '</span>'
+                        );
+                    }
+                } else {
+                    username_field.css('border-color', "#e8e8e8");
+                    $('#username-exists-error').remove();
+                }
+            }
+        });
+    });
+</script>

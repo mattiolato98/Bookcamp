@@ -1,0 +1,71 @@
+{% extends 'base_full_page_box.html' %}
+{% load static %}
+
+{% comment %}
+    Pagina per la modifica di una categoria di libri nel bookshelf.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Modifica Bookshelf{% endblock %}
+
+{% block first_column_classes %}unnecessary-column{% endblock %}
+{% block second_column_content %}
+    <div class="mb-5">
+        <h6 class="font-5">
+            <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">
+                Profilo
+            </a>
+            &nbsp;>&nbsp;
+            <a class="site-link" href="{% url 'user_management:bookshelf' user.pk %}">
+                Bookshelf
+            </a>
+            &nbsp;>&nbsp; Modifica libri
+            {% if type == "READING" %}
+                in lettura
+            {% endif %}
+            {% if type == "READ" %}
+                letti
+            {% endif %}
+            {% if type == "MUSTREAD" %}
+                da leggere
+            {% endif %}
+        </h6>
+        <h5 class="font-6 mb-0">
+            Libri
+            {% if type == "READING" %}
+                in lettura &nbsp;
+                <span id="books_count" class="font-5 text-muted">{{ user.profile.reading_books_set.count }}</span>
+            {% endif %}
+            {% if type == "READ" %}
+                letti &nbsp;
+                <span id="books_count" class="font-5 text-muted">{{ user.profile.read_books_set.count }}</span>
+            {% endif %}
+            {% if type == "MUSTREAD" %}
+                da leggere &nbsp;
+                <span id="books_count" class="font-5 text-muted">{{ user.profile.must_read_books_set.count }}</span>
+            {% endif %}
+        </h5>
+        <span class="text-muted font-5 mt-0">
+            Rimuovi o sposta i libri nel tuo bookshelf
+        </span>
+    </div>
+    <div>
+        {% if type == "READING" %}
+            {% include 'user_management/bookshelf/update_bookshelf_books_list.html' with books=user.profile.reading_books_set %}
+        {% endif %}
+
+        {% if type == "READ" %}
+            {% include 'user_management/bookshelf/update_bookshelf_books_list.html' with books=user.profile.read_books_set %}
+        {% endif %}
+
+        {% if type == "MUSTREAD" %}
+            {% include 'user_management/bookshelf/update_bookshelf_books_list.html' with books=user.profile.must_read_books_set %}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block third_column_classes %}unnecessary-column{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/bookshelf.js' %}"></script>
+    <script src="{% static 'js/update_bookshelf.js' %}"></script>
+    {% include 'user_management/bookshelf/bookshelf_ajax.html' %}
+{% endblock %}

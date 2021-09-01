@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load book_filters %}
+
+{% block title %}{{ block.super }} {{ book.title }} di {{ user.username }}{% endblock %}
+
+{% block header %}
+    <div id="view-private-book-header-background"
+         class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title p-2">
+          Informazioni private del libro
+        </span>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mb-3 w-auto site-attached-col">
+        <div class="row">
+            <div class="site-col site-box shadow col-lg-9 col-12 p-4 bg-white">
+                <div class="row">
+                    <div class="col site-col">
+                        <h6 class="font-5">
+                            <a class="site-link" href="{% url 'user_management:view-profile' user.pk %}">
+                                Profilo
+                            </a>
+                            &nbsp;>&nbsp;
+                            <a href="{% url 'user_management:bookshelf' user.pk %}" class="site-link">
+                                Bookshelf
+                            </a>
+                            &nbsp;>&nbsp;
+                            Informazioni private libro
+                        </h6>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-lg col-12 site-col">
+                        {% if book.title %}
+                            <h2 class="font-7">{{ book.title }}</h2>
+                        {% endif %}
+                        {% if book.authors_count > 0 %}
+                            <h5 class="font-4 text-muted">di {{ book.authors_str }}</h5>
+                        {% endif %}
+                        <h6 class="font-6 text-success mb-0">
+                            <i class="fas fa-check"></i> &nbsp;{{ book|get_user_book_status:user }}
+                        </h6>
+                    </div>
+                    <div class="col-lg-auto col-12 site-col media d-flex align-items-start">
+                        <div class="media-body mr-3 text-muted text-right">
+                            <a href="{% url 'user_management:view-profile' user.pk %}"
+                               class="flat-link font-6 break-word">
+                                {{ user.profile.user.username|truncatechars:30 }}
+                            </a>
+                            <br>
+                            <span class="font-4 break-word">{{ user.profile.get_name|truncatechars:40 }}</span>
+                        </div>
+                        <a href="{% url 'user_management:view-profile' user.pk %}">
+                            <img class="rounded-picture-medium align-self-center" alt=""
+                                 src="{{ user.profile.picture.url }}">
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mt-2">
+                    <div class="col-12  d-flex justify-content-end">
+                        <i class="fas fa-ellipsis-h site-small-icon"
+                           data-toggle="dropdown"></i>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                            <a class="dropdown-item cursor-pointer"
+                               href="{% url 'user_management:bookshelf-update-book' book.pk %}">Modifica</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-12 col-12 site-col">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="font-6">&#128198;&nbsp;Inserito</h5>
+                            <span class="font-5 text-muted text-right">{{ profile_book.creation_date_time|date }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="font-6">&#128198;&nbsp;Iniziato a leggere</h5>
+                            <span class="font-5 text-muted text-right">
+                                {% if profile_book.start_reading_date %}
+                                    {{ profile_book.start_reading_date }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="font-6">&#128198;&nbsp;Finito di leggere</h5>
+                            <span class="font-5 text-muted text-right">
+                                {% if profile_book.end_reading_date %}
+                                    {{ profile_book.end_reading_date }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="font-6"><i class="far fa-star site-yellow-text"></i>&nbsp;Voto</h5>
+                            {% if book|user_rated_book:user %}
+                                {% with vote=book|get_user_book_rating:user %}
+                                    {% include 'base_progress_bar.html' with progress_container_custom_class='w-25' %}
+                                {% endwith %}
+                            {% else %}
+                                <span class="font-5 text-muted">Non ancora recensito</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col site-col site-box shadow ml-3 p-4 bg-white comment-information">
+                <a href="{% url 'view-public-book' book.pk %}" class="d-flex justify-content-center mb-3">
+                    <img src="{{ book.cover_image_file.url }}" class="cover-img picture-big" alt="">
+                </a>
+                {% include "book_management/base_book_metadata_inline.html" with hide_title=True hide_authors=True %}
+                <hr>
+                {% with vote=book.average_rating %}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        {% if vote is None %}
+                            <h6 class="font-7">Ancora nessun voto</h6>
+                        {% else %}
+                            <div>
+                                <h6 class="font-7 mb-0">Valutazione media</h6>
+                                <span class="font-5 text-muted">
+                                    {{ book.number_of_ratings }}
+                                    {% if book.number_of_ratings == 1 %}voto{% else %}voti{% endif %}
+                                </span>
+                            </div>
+                            {% include 'base_progress_bar.html' with progress_container_custom_class='w-25' %}
+                        {% endif %}
+                    </div>
+                {% endwith %}
+                <div class="d-flex column-flex align-items-end mt-5">
+                    <span class="text-muted font-5 text-right">
+                        <i class="fas fa-lock mr-1"></i>Pagina privata visibile solo a te
+                    </span>
+                    <a href="{% url 'view-public-book' book.pk %}" class="site-blue-text font-7 text-right">
+                        Vai alla pagina pubblica
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

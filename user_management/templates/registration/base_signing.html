@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% comment %}
+    Tempalte base per il signing.
+{% endcomment %}
+
+{% block extra_css %}
+    <link rel="stylesheet"
+          href="{% static 'css/signing.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row h-100">
+        <div id="background-column" class="col">
+        </div>
+        <div id="signing-column" class="col p-4 d-flex align-items-center justify-content-center">
+            <div id="signing-form" class="{% block extra_form_attributes %}{% endblock %}">
+                <form method="POST">
+                    <h2 class="logo-font display-4 mb-5">{% block signing_title %}{% endblock %}</h2>
+                    <div>
+                        {% crispy form %}
+                        <div class="d-flex mt-5 column-flex">
+                            <input id="submit-signing-button" class="btn btn-dark mb-2 w-75" type="submit"
+                                   value="{% block signing_submit_value %}{% endblock %}">
+                            <a class="site-link" href="{% block undo_url %}{% endblock %}">
+                                {% block undo_text %}{% endblock %}
+                            </a>
+                            {% block extra_url %}{% endblock %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

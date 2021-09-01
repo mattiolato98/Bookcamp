@@ -1,0 +1,9 @@
+*.pyc
+.idea
+__pycache__
+Pipfile.lock
+.DS_Store
+/books_base_folder/email_settings.py
+/books_base_folder/secret_key.txt
+db.sqlite3
+*.json

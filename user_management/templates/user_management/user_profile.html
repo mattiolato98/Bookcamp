@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load comment_filters %}
+{% load user_filters %}
+
+{% comment %}
+    Pagina per la visualizzazione di un profilo.
+{% endcomment %}
+
+{% block title %}{{ block.super }} {{ user_for_profile.username|truncatechars:30 }}{% endblock %}
+
+{% block header %}
+    <div class="container-fluid p-4 mb-3 bg-white w-100  mb-5 shadow-lg">
+        <div class="row">
+            <div class="col-lg-3 col-12 d-flex align-items-top justify-content-start mobile-center">
+                {% if user_for_profile.has_profile and user_for_profile.profile.picture %}
+                    <img src="{{ user_for_profile.profile.picture.url }}" class="rounded-picture-extra-big" alt="">
+                {% endif %}
+            </div>
+            <div class="site-col col-lg-6 col-12 mt-3 mb-3">
+                {% if not user_for_profile.has_profile %}
+                    <div class="mb-4">
+                        <span class="font-7 text-danger">
+                            Gli altri utenti non potranno segurti finchè non avrai completato il tuo profilo.
+                        </span>
+                    </div>
+                {% endif %}
+                <div class="d-flex align-items-center justify-content-between break-word flex-wrap">
+                    <h2 class="font-3">
+                        {{ user_for_profile.username }}
+                    </h2>
+
+                    {% if user == user_for_profile %}
+                        <div class="d-flex align-items-center">
+                            {% if user_for_profile.has_profile %}
+                                <a href="{% url 'user_management:update-profile' %}"
+                                   class="site-blue-text font-7 no-decoration mr-3">
+                                    Modifica profilo
+                                </a>
+                            {% endif %}
+                            <a class="flat-link mr-3" data-toggle="tooltip" data-placement="top"
+                               title="Impostazioni" href="{% url 'user_management:user-settings' %}">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                            <a class="flat-link" data-toggle="tooltip" data-placement="top"
+                               title="Esci" href="{% url 'user_management:logout' %}">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                        </div>
+                    {% else %}
+                        {% if user_for_profile.has_profile %}
+                            {% if user|follow:user_for_profile %}
+                                <a id="start-follow-user" class="btn site-btn w-25 follow-user" style="display: none;">
+                                    Segui
+                                </a>
+                                <a id="stop-follow-user" class="btn btn-light w-25 follow-user">
+                                    <i class="fas fa-check"></i> &nbsp; Segui già
+                                </a>
+                            {% else %}
+                                <a id="start-follow-user" class="btn site-btn w-25 follow-user">
+                                    Segui
+                                </a>
+                                <a id="stop-follow-user" class="btn btn-light w-25 follow-user" style="display: none;">
+                                    <i class="fas fa-check"></i> &nbsp; Segui già
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if user_for_profile.has_profile %}
+                    <div class="row mt-3">
+                        <div class="col site-col">
+                            <span class="font-6">{{ user_for_profile.topics_count }}</span>
+                            <span class="font-4">Topic</span>
+                        </div>
+                        <div class="col site-col d-flex justify-content-center">
+                            <span class="font-6">{{ user_for_profile.comments_count }}&nbsp;</span>
+                            <span class="font-4">
+                                {% if user_for_profile.comments_count == 1 %}
+                                    Commento
+                                {% else %}
+                                    Commenti
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="col site-col d-flex justify-content-end">
+                            {% with following=user_for_profile.followed_profiles.count %}
+                                <span class="font-6">{{ following }}&nbsp;</span>
+                                {% if user_for_profile == user %}
+                                    <a href="{% url 'user_management:following-profiles' %}" class="font-4 flat-link">
+                                {% endif %}
+                            {% if following == 1 %}
+                                Seguito
+                            {% else %}
+                                Seguiti
+                            {% endif %}
+                            {% if user_for_profile == user %}
+                                </a>
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex column-flex align-items-start profile-data flex-wrap break-word">
+                        <div>
+                            <span class="font-7">{{ user_for_profile.profile.get_name }}</span>
+                            <span class="font-5"> - {{ user_for_profile.email }}</span>
+                        </div>
+                        {% include 'comment_management/base_truncated_text.html' with text=user_for_profile.profile.description chars=700 %}
+                    </div>
+                    <div class="mt-5 list-group list-group-flush">
+                        {% if user_for_profile.profile.books_set.count > 0 %}
+                            <a href="{% url 'user_management:bookshelf' user_for_profile.pk %}"
+                               class="list-group-item list-group-item-action
+                               d-flex justify-content-start align-items-center flex-wrap clickable-element">
+                                {% for book in user_for_profile.profile.books_set_for_shelf|slice:":12" %}
+                                    <img class="picture-medium mr-1" src="{{ book.cover_image_file.url }}" alt="">
+                                {% endfor %}
+                            </a>
+                        {% elif user_for_profile.profile.books_set.count == 0 and user_for_profile == request.user %}
+                            <a href="{% url 'user_management:bookshelf' user.pk %}" class="site-blue-text font-6">
+                                Aggiungi libri al tuo bookshelf
+                            </a>
+                        {% else %}
+                            <span class="font-6 break-word">
+                                {{ user_for_profile.username|truncatechars:40 }} non ha ancora inserito libri nel suo bookshelf
+                            </span>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="mb-2">
+                    <span>Ciao </span><span class="font-7">{{ user.username|truncatechars:40 }}</span>,
+                    <span>sembra che tu non abbia ancora inserito i tuoi dati.</span>
+                    <a class="font-7 site-blue-text" href="{% url 'user_management:create-profile' %}">Fallo ora</a>
+                    </div>
+                    <div>
+                    <span class="site-red-text font-7">Completa il profilo per inserire libri nel tuo bookshelf.</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col unnecessary-column">
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <nav class="nav nav-pills header-tabs flex-sm-row mt-4 mb-0">
+                <a id="user-profile-topics-link"
+                   class="flex-sm-fill text-sm-center nav-link active site-btn-outline ml-5 mr-5 cursor-pointer">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-align-left mr-2 nav-link-icon"></i>
+                        <span class="font-4 nav-link-text">Topic</span>
+                    </div>
+                </a>
+                <a id="user-profile-comments-link"
+                   class="flex-sm-fill text-sm-center nav-link mr-5 ml-5 cursor-pointer">
+                    <div class="d-flex align-items-center">
+                        <i class="far fa-comment mr-2 nav-link-icon"></i>
+                        <span class="font-4 nav-link-text">Commenti</span>
+                    </div>
+                </a>
+                {% if user_for_profile == user %}
+                    <a id="user-profile-saved-topics-link"
+                       class="flex-sm-fill text-sm-center nav-link mr-5 ml-5 cursor-pointer">
+                        <div class="d-flex align-items-center">
+                            <i class="far fa-bookmark mr-2 nav-link-icon"></i>
+                            <span class="font-4 nav-link-text">Elementi salvati</span>
+                        </div>
+                    </a>
+                    <a id="user-profile-liked-topics-link"
+                       class="flex-sm-fill text-sm-center nav-link mr-5 ml-5 cursor-pointer">
+                        <div class="d-flex align-items-center">
+                            <i class="far fa-heart mr-2 nav-link-icon"></i>
+                            <span class="font-4 nav-link-text">Topic che ti piacciono</span>
+                        </div>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if user_for_profile.has_profile %}
+        <div id="user-profile-topics-set">
+            {% for topic in user_for_profile.topics_set %}
+                <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75 comment-box">
+                    {% include 'comment_management/base_topic.html' with show_book=True book=topic.book %}
+                </div>
+            {% empty %}
+                <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75">
+                    <span class="font-6">Pare non ci sia nulla qui.</span>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="user-profile-comments-set" style="display: none">
+            {% for book,comments in user_for_profile.comments_set_group_by_book.items %}
+                <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75">
+                    <a class="flat-link d-flex align-items-center justify-content-between"
+                       href="{% url 'view-public-book' book.pk %}">
+                        <h5 class="font-6">
+                            {{ book.title|truncatewords:10 }} di {{ book.authors_str|truncatewords:5 }}
+                        </h5>
+                        <img class="picture-medium" src="{{ book.cover_image_file.url }}" alt="">
+                    </a>
+                    {% for comment in comments %}
+                        <div class="mb-4">
+                            <hr>
+                            {% include 'comment_management/base_comment.html' with is_profile=True topic=comment.topic book=comment.topic.book %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {% if user_for_profile.comments_count == 0 %}
+                <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75">
+                    <span class="font-6">Pare non ci sia nulla qui.</span>
+                </div>
+            {% endif %}
+        </div>
+        {% if user_for_profile == user %}
+            <div id="user-profile-saved-topics-set" style="display: none">
+                {% for topic in user_for_profile.saved_topics_set %}
+                    <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75 comment-box">
+                        {% include 'comment_management/base_topic.html' with show_book=True book=topic.book %}
+                    </div>
+                {% empty %}
+                    <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75">
+                        <span class="font-6">Pare non ci sia nulla qui.</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="user-profile-liked-topics-set" style="display: none">
+                {% for topic in user_for_profile.liked_topics_set %}
+                    <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75 comment-box">
+                        {% include 'comment_management/base_topic.html' with show_book=True book=topic.book %}
+                    </div>
+                {% empty %}
+                    <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75">
+                        <span class="font-6">Pare non ci sia nulla qui.</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-75 comment-box">
+            <span class="font-7 text-danger">Completa il profilo per vedere le tue attività.</span>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/base_topic.js' %}"></script>
+    <script src="{% static 'js/show_more_less.js' %}"></script>
+    {% include 'comment_management/topic_ajax.html' %}
+    {% include 'user_management/profile_ajax.html' %}
+    <script src="{% static 'js/user_profile.js' %}"></script>
+{% endblock %}

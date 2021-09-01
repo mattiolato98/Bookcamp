@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% comment %}
+    Pagina per l'inserimento di un nuovo libro.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Nuovo libro{% endblock %}
+
+{% block header %}
+    <div id="book-header-background" class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title">Aggiungi un testo alla libreria</span>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="site-box container-fluid shadow p-4 mb-3 bg-white w-auto">
+        <div class="row">
+            <div class="site-col col unnecessary-column">
+            </div>
+            <div class="site-col col-lg-6 col-12 ml-5">
+                <h6 class="font-5">Nuovo &nbsp;>&nbsp; Inserisci codice ISBN</h6>
+                <h5 class="font-6">Inserisci il codice ISBN del libro</h5>
+                <div id="new-book-loading-icon"></div>
+                {% crispy form %}
+            </div>
+            <div class="vertical-line"></div>
+            <div class="site-col col ml-2 mr-2 d-flex align-items-center">
+               <span class="text-muted">
+                   Il sistema genererà automaticamente la pagina del libro partendo dal
+                   codice ISBN, se non è già presente nella libreria.
+               </span>
+            </div>
+        </div>
+    </div>
+
+    <div id="new-book-data-box" class="site-box container-fluid shadow p-4 mb-3 bg-white w-auto" style="display: none">
+        <div class="row">
+            <div id="book-cover-div" class="site-col col d-flex align-items-center justify-content-center">
+                <img id="new-book-cover-image" class="book-found">
+            </div>
+            <div class="site-col col-lg-6 col-12 ml-5">
+                <h5 class="mb-4">Dati del libro</h5>
+                <span id="new-book-not-found-message" class="font-7 text-danger book-not-found" style="display: none">
+                    Libro non trovato. Ci dispiace!
+                </span>
+                <span id="new-book-already-exists-message" class="font-7 text-danger book-not-found" style="display: none">
+                    Il libro è gia presente nella libreria.
+                    <a id="book-already-exists-url" href="#" class="font-7 site-blue-text">Vedi</a>
+                </span>
+                <div id="new-book-search-error">
+                    <span class="font-7 site-red-text">C'è stato un errore durante la ricerca. Riprova</span>
+                </div>
+                {% include 'book_management/base_book_metadata_inline.html' %}
+            </div>
+            <div class="site-col col unnecessary-column">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/new_book.js' %}"></script>
+    {% include 'book_management/book_ajax.html' %}
+{% endblock %}

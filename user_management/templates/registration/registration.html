@@ -1,0 +1,18 @@
+{% extends 'registration/base_signing.html' %}
+
+{% comment %}
+    Pagina per la registrazione di un utente.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Registrazione{% endblock %}
+
+{% block signing_title %}Inserisci i tuoi dati{% endblock %}
+{% block signing_submit_value %}Registrati{% endblock %}
+
+{% block undo_url %}{% url 'user_management:login' %}{% endblock %}
+{% block undo_text %}Ritorna al login{% endblock %}
+
+{% block extra_javascript %}
+    {% include 'user_management/registration_ajax.html' %}
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% load book_filters %}
+
+{% comment %}
+    Template base contenente un elemento Book di una lista di libri.
+{% endcomment %}
+
+<div class="media d-flex align-items-center col p-0">
+    <img class="picture-medium align-self-center" src="{{ book.cover_image_file.url }}" alt="">
+    <div class="media-body ml-3 d-flex column-flex justify-content-center align-items-start">
+        <span class="font-6 md-only-text">
+            {{ book.title }}
+        </span>
+        <span class="font-6 sm-only-text">
+            {{ book.title|truncatechars:50 }}
+        </span>
+        {% if book.authors_count > 0 %}
+            <span class="font-4">di {{ book.authors_str }}</span>
+        {% endif %}
+    </div>
+</div>
+{% if rating %}
+    {% if book|user_rated_book:user_for_profile %}
+        {% with vote=book|get_user_book_rating:user_for_profile %}
+            <div class="column-progress col-md-3 col-sm-6 mt-auto mb-auto ml-5">
+                {% include 'base_progress_bar.html' %}
+            </div>
+        {% endwith %}
+    {% endif %}
+{% endif %}
+{% if top_badge and book.is_top_5 %}
+    <div class="d-flex align-items-center justify-content-end col-auto books-list-second-column">
+        <span class="badge badge-danger p-1 top-badge">Top 5</span>
+    </div>
+{% endif %}

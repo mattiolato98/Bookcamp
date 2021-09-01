@@ -1,0 +1,22 @@
+{% extends 'comment_management/base_topic_form.html' %}
+{% load crispy_forms_tags %}
+
+{% comment %}
+    Pagina per la modifica di un topic.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Modifica Topic{% endblock %}
+
+{% block topic_form_path %}
+    <a class="site-link" href="{% url 'view-public-book' book.pk %}">{{ book.title|truncatewords:6 }}</a>
+    &nbsp;>&nbsp;
+    <a class="site-link" href="{% url 'comment_management:view-topic' topic.pk %}">Topic</a>
+    &nbsp;>&nbsp;
+    Modifica topic
+{% endblock %}
+
+{% block topic_form_title %}Modifica il tuo topic{% endblock %}
+{% block topic_form_subtitle %}Modifica le informazioni del tuo topic{% endblock %}
+{% block submit_button_value %}Salva{% endblock %}
+{% block submit_button_form_id %}update-topic-crispy-form{% endblock %}
+{% block cancel_button_url %}{% url 'comment_management:view-topic' topic.pk %}{% endblock %}

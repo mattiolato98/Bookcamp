@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load book_filters %}
+
+{% comment %}
+    Template base contenente il form di un topic.
+{% endcomment %}
+
+{% block content %}
+    <div class="container-fluid mb-3 w-auto">
+        <div class="row">
+            <div class="site-col col-lg-9 col-12 site-box bg-white shadow p-4">
+                <div class="mb-4">
+                    <h6 class="font-5">{% block topic_form_path %}{% endblock %}</h6>
+                    <h5 class="font-6 mb-0">{% block topic_form_title %}{% endblock %}</h5>
+                    <span class="text-muted font-5 mt-0">{% block topic_form_subtitle %}{% endblock %}</span>
+                </div>
+                {% crispy form %}
+                <div class="d-flex column-flex align-items-start mt-5">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <input class="btn site-btn w-100" type="submit"
+                               form="{% block submit_button_form_id %}{% endblock %}"
+                               value="{% block submit_button_value %}{% endblock %}">
+                        <a class="site-link font-6 ml-3" href="{% block cancel_button_url %}{% endblock %}">
+                            Annulla
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="site-col col site-box bg-white shadow p-5 ml-3">
+                 <div class="d-flex justify-content-center mb-4">
+                    <a href="{% url 'view-public-book' book.pk %}" class="no-decoration">
+                        <img src="{{ book.cover_image_file.url }}" class="img-fluid cover-img picture-big" alt="">
+                    </a>
+                </div>
+                {% include 'book_management/base_book_metadata_column.html' %}
+                <hr>
+                <div class="row d-flex align-items-center justify-content-between column-flex mb-4">
+                    {% if user.has_profile %}
+                        {% if book|user_saved_book:user %}
+                            {% if book|user_rated_book:user %}
+                                <h5 class="font-7 mb-2">Il tuo voto</h5>
+                                {% with vote=book|get_user_book_rating:user %}
+                                    {% include 'base_progress_bar.html' with progress_container_custom_class='w-75' %}
+                                {% endwith %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="row d-flex align-items-center justify-content-between column-flex mb-3">
+                    {% with vote=book.average_rating %}
+                        {% if vote is None %}
+                            <h5 class="font-7">Ancora nessun voto</h5>
+                        {% else %}
+                            <h5 class="font-7 mb-0">Valutazione media</h5>
+                            <span class="font-6 text-muted mb-2">
+                                {{ book.number_of_ratings }}
+                                {% if book.number_of_ratings == 1 %}voto{% else %}voti{% endif %}
+                            </span>
+                            {% include 'base_progress_bar.html' with progress_container_custom_class='w-75'%}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

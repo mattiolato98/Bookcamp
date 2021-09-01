@@ -1,0 +1,18 @@
+{% extends 'registration/base_signing.html' %}
+
+{% comment %}
+    Pagina per il login dell'utente.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Login{% endblock %}
+
+{% block signing_title %}Benevenuto in Bookcamp.{% endblock %}
+{% block signing_submit_value %}Login{% endblock %}
+
+{% block undo_url %}{% url 'user_management:registration' %}{% endblock %}
+{% block undo_text %}Non hai un account? Registrati ora{% endblock %}
+{% block extra_url %}
+    <a class="light-link" href="{% url 'home' %}">
+        Continua senza accedere
+    </a>
+{% endblock %}

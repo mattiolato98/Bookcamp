@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load book_filters %}
+{% load crispy_forms_tags %}
+
+{% comment %}
+    Pagina per la visualizzazione di un topic. Contiene:
+        - Topic
+        - Lista dei commenti associati
+        - Form di inserimento di un nuovo commento
+{% endcomment %}
+
+{% block title %}{{ block.super }} Topic di {{ topic.user_owner.username }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mb-3 w-auto site-attached-col">
+        <div class="row">
+            <div class="site-attached-col site-box shadow col-lg-9 col-12 h-50 p-4 bg-white comment-box">
+                {% include 'comment_management/base_topic.html' with is_comment=True %}
+            </div>
+            <div class="col site-attached-col site-box shadow ml-3 p-4 bg-white comment-information">
+                <div class="card-body">
+                    <div class="row d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="font-7">Ultima modifica</h5>
+                        <span class="text-muted font-6">{{ topic.last_modified_date_time|date:"d M Y" }}</span>
+                    </div>
+                    <div class="row d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="font-7">Parole</h5>
+                        <span class="text-muted font-6">{{ topic.message|wordcount }}</span>
+                    </div>
+                    <div class="row d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="font-7">Caratteri</h5>
+                        <span class="text-muted font-6">{{ topic.message|length }}</span>
+                    </div>
+                    {% if topic.user_owner == user %}
+                        <div class="row d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h5 class="font-7 mb-0">Salvataggi</h5>
+                                <span class="font-5 mt-0 text-muted">Visibile solo a te</span>
+                            </div>
+                            <span class="text-muted font-6">{{ topic.bookmarks_count }}</span>
+                        </div>
+                    {% endif %}
+                    <hr>
+                    <div class="row d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="font-7">Voto dell'utente</h5>
+                        {% if topic.user_owner.has_profile and topic.book|user_rated_book:topic.user_owner %}
+                            {% with vote=topic.book|get_user_book_rating:topic.user_owner %}
+                                {% include 'base_progress_bar.html' with progress_container_custom_class='w-25' %}
+                            {% endwith %}
+                        {% else %}
+                            <span class="font-6 text-muted">Non recensito</span>
+                        {% endif %}
+                    </div>
+                    <div class="row d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h5 class="font-7 mb-0">Stato libro</h5>
+                            <span class="font-5 mt-0 text-muted">Nel bookshelf dell'utente</span>
+                        </div>
+                        {% if topic.user_owner.has_profile and topic.book|user_saved_book:topic.user_owner %}
+                            <span class="font-6 text-success">
+                                <i class="fas fa-check"></i>&nbsp;{{ topic.book|get_user_book_status:topic.user_owner }}
+                            </span>
+                        {% else %}
+                            <span class="font-6 site-red-text">
+                                <i class="fas fa-times"></i>&nbsp;Non salvato
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="row d-flex justify-content-end mb-auto">
+                        <a class="site-blue-text font-7" href="{% url 'view-public-book' topic.book_id %}">Vai al libro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid shadow p-2 mt-5 mb-lg-3 bg-white w-50 site-box">
+        <div id="view-box-information" style="display:none;">
+            {% if user.is_authenticated and user.has_profile %}
+                <div class="media d-flex align-items-center ml-auto mb-3">
+                    <a href="{% url 'user_management:view-profile' user.pk %}">
+                        <img class="rounded-picture-small align-self-center"
+                             src="{{ user.profile.picture.url }}">
+                    </a>
+                    <div class="media-body ml-3 text-muted">
+                        <a href="{% url 'user_management:view-profile' user.pk %}"
+                           class="flat-link font-6 break-word">
+                            {{ user.profile.user.username|truncatechars:30 }}
+                        </a>
+                        <br>
+                        <span class="font-4 break-word">{{ user.profile.get_name|truncatechars:40 }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            {% crispy form %}
+        </div>
+        <div class="d-flex align-items-center justify-content-center cursor-pointer w-100 expand-box-data mt-2">
+            <h4 class="font-6 box-data-hide text-center">
+                Aggiungi un commento
+                <i class="fas fa-caret-down"></i>
+            </h4>
+            <i class="fas fa-caret-up box-data-show site-big-icon" style="display: none"></i>
+        </div>
+    </div>
+    <div class="container-fluid site-box shadow p-4 mb-3 bg-white w-75">
+        <div class="row xl-only">
+            <div class="col site-col d-flex justify-content-start align-items-end">
+                <h4 class="font-7 mr-3">Commenti</h4><h5 class="text-muted font-5">{{ topic.comments_count }}</h5>
+            </div>
+        </div>
+        {% for comment in object_list %}
+            <div class="mb-4 comment-box">
+                <hr>
+                {% include 'comment_management/base_comment.html' %}
+            </div>
+        {% empty %}
+            <hr>
+            <span class="font-5 text-muted mt-3">Ancora nessun commento. Commenta per primo!</span>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/base_topic.js' %}"></script>
+    <script src="{% static 'js/show_more_less.js' %}"></script>
+    {% include 'comment_management/topic_ajax.html' %}
+    <script src="{% static 'js/view_book.js' %}"></script>
+{% endblock %}

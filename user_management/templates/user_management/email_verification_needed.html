@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% comment %}
+    Pagina indicante la necessità di confermare la propria mail prima di procedere.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Conferma della mail{% endblock %}
+
+{% block content %}
+    <h3 class="font-7 d-flex justify-content-center">Controlla la tua casella di posta.</h3>
+    <h5 class="font-7 text-muted d-flex justify-content-center">
+        Dovresti aver ricevuto un link per confermare la tua
+        email. Se l'hai già fatto puoi eseguire il &nbsp;
+        <a class="site-blue-text font-7" href="{% url 'user_management:login' %}">login</a>.
+    </h5>
+{% endblock %}

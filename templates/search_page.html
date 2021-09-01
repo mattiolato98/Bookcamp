@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% comment %}
+    Pagina per la ricerca.
+{% endcomment %}
+
+{% block extra_css %}
+    {% if books is None %}
+        <style type="text/css">
+            html,body {
+                height: 100%;
+                overflow: hidden;
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block title %}{{ block.super }} Cerca{% endblock %}
+
+{% block header %}
+    {% if books is None %}
+        <div id="book-search-background-no-books-found"
+              class="row w-100 d-flex align-items-center justify-content-center column-flex">
+    {% else %}
+        <div id="book-search-background"
+             class="row w-100 d-flex align-items-center justify-content-center column-flex shadow">
+    {% endif %}
+        <div class="row">
+            <span class="text-white text-center logo-font font-5 display-4 site-big-title">Cosa stai cercando?</span>
+        </div>
+        <div class="row mt-4 w-100 d-flex justify-content-center">
+            <div class="col unnecessary-column"></div>
+            <div class="col-lg-6 col-12 site-col d-flex justify-content-center">
+                    {% crispy form %}
+                    <button class="btn btn-transparent small-btn form-control w-auto" type="submit" form="search-crispy-form">
+                        <i class="fas fa-search white-icon"></i>
+                    </button>
+            </div>
+            <div class="col unnecessary-column"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if books.count > 0 or profiles.count > 0 %}
+        <div class="container-fluid site-box p-2 mb-3 bg-white w-75 shadow">
+            <div class="row">
+                <div class="col unnecessary-column"></div>
+                <div class="col-lg-6 col-12 site-attached-col d-flex align-items-center justify-content-center mt-3 ml-3">
+                    <h3 class="font-6 text-center">Risultati della ricerca</h3>
+                </div>
+                <div class="col unnecessary-column"></div>
+            </div>
+
+            <nav class="nav nav-pills header-tabs flex-sm-row mt-4 mb-2">
+                <a id="search-header-libri"
+                   class="flex-sm-fill text-sm-center nav-link active site-btn-outline ml-5 mr-5 cursor-pointer">
+                    <span class="font-4">
+                        Libri {{ books.count }}
+                    </span>
+                </a>
+                <a id="search-header-utenti"
+                   class="flex-sm-fill text-sm-center nav-link mr-5 ml-5 cursor-pointer">
+                    <span class="font-4">
+                        Utenti {{ profiles.count }}
+                    </span>
+                </a>
+            </nav>
+            <div class="search-list-books">
+                {% include 'book_management/books_action_list_view_public_book.html' with top_badge=True %}
+            </div>
+            <div class="search-list-users" style="display: none;">
+                {% include 'user_management/base_profiles_list.html' %}
+            </div>
+         </div>
+    {% else %}
+        <h3 class="font-7 d-flex justify-content-center">Nessun risultato corrisponde alla tua ricerca</h3>
+        <h5 class="font-7 text-muted d-flex justify-content-center">Prova con qualcos'altro, oppure &nbsp;
+            <a class="site-blue-text font-7" href="{% url 'book_management:new-book' %}">inserisci un nuovo libro</a>
+        </h5>
+    {% endif %}
+{% endblock %}
+
+{% block extra_javascript %}
+    <script src="{% static 'js/search.js' %}"></script>
+{% endblock %}

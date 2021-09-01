@@ -1,0 +1,66 @@
+{% comment %}
+    Template che mostra i metadati di un libro in linea.
+{% endcomment %}
+
+<div id="book-data" class="book-found">
+    {% if not hide_title %}
+        <dl class="row">
+            <dt class="col-sm-6 col-12 font-7 text-center-xs">Titolo</dt>
+            <dd id="book-title" class="col-sm-6 col-12 text-muted text-right font-5 text-center-xs">
+                {% if book.title %}
+                    {{ book.title }}
+                {% else %}
+                    -
+                {% endif %}
+            </dd>
+        </dl>
+    {% endif %}
+    {% if not hide_authors %}
+        <dl class="row">
+            <dt id="book-authors-title" class="col-sm-6 col-12 font-7 text-center-xs">
+                {% if book.authors_count > 1 %}
+                    Autori
+                {% else %}
+                    Autore
+                {% endif %}
+            </dt>
+            <dd id="book-authors" class="col-sm-6 col-12 text-muted text-right font-5 text-center-xs">
+                {% if book.authors_count > 0 %}
+                    {{ book.authors_str }}
+                {% else %}
+                    -
+                {% endif %}
+            </dd>
+        </dl>
+    {% endif %}
+    <dl class="row">
+        <dt class="col-sm-6 col-12 font-7 text-center-xs">Editore</dt>
+        <dd id="book-publisher" class="col-sm-6 col-12 text-muted text-right font-5 text-center-xs">
+            {% if book.publisher %}
+                {{ book.publisher }}
+            {% else %}
+                -
+            {% endif %}
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="col-sm-6 col-12 font-7 text-center-xs">Anno di pubblicazione</dt>
+        <dd id="book-year" class="col-sm-6 col-12 text-muted text-right font-5 text-center-xs">
+            {% if book.year %}
+                {{ book.year }}
+            {% else %}
+                -
+            {% endif %}
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class="col-sm-6 col-12 font-7 text-center-xs">Lingua</dt>
+        <dd id="book-language" class="col-sm-6 col-12 text-muted text-right font-5 text-center-xs">
+            {% if book.language %}
+                {{ book.language }}
+            {% else %}
+                -
+            {% endif %}
+        </dd>
+    </dl>
+</div>

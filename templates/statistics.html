@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+    Pagina Statistiche Globali.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Statistiche globali{% endblock %}
+
+{% block header %}
+    <div id="statistics-background" class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title">Statistiche</span>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid mb-3 w-auto">
+        <div class="row">
+            <div class="col site-col container-fluid mb-3 w-auto site-box shadow p-4 bg-white">
+                <h4 class="font-6 p-4">Libri popolari</h4>
+                <hr>
+                {% include 'book_management/books_action_list_view_public_book.html' with books=popular_books %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col site-col container-fluid mb-3 w-auto site-box shadow p-4 bg-white">
+                <h4 class="font-6 p-4">Utenti con più topic pubblicati</h4>
+                <hr>
+                {% include 'user_management/base_profiles_list.html' with profiles=popular_profiles_by_topics is_topics=True %}
+            </div>
+            <div class="col site-col container-fluid mb-3 ml-3 w-auto site-box shadow p-4 bg-white">
+                <h4 class="font-6 p-4">Utenti che hanno scritto più commenti</h4>
+                <hr>
+                {% include 'user_management/base_profiles_list.html' with profiles=popular_profiles_by_comments is_comments=True %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

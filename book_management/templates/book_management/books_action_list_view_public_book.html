@@ -1,0 +1,22 @@
+{% extends 'base_list.html' %}
+{% load book_filters %}
+
+{% comment %}
+    Template base per le liste di libri con link verso la pagina pubblica del libro.
+{% endcomment %}
+
+{% block list_content %}
+    {% for book in books %}
+        <div class="text-element">
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
+                {% if rating %} list-group-item-progress-bar {% endif %}"
+               href="{% url 'view-public-book' book.pk %}">
+                {% include 'book_management/base_book_list_item.html' %}
+            </a>
+        </div>
+    {% empty %}
+        <div class="ml-5 mt-5 mb-3">
+            <span class="font-6">Pare non ci sia nulla qui.</span>
+        </div>
+    {% endfor %}
+{% endblock %}

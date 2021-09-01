@@ -1,0 +1,17 @@
+{% extends 'book_management/base_books_flat_list.html' %}
+{% load book_filters %}
+
+{% comment %}
+    Template base per la lista di libri con le azioni di modifica.
+{% endcomment %}
+
+{% block book_actions %}
+    <div class="ml-5 d-flex align-items-center books-list-second-column">
+        <i class="fas fa-exchange-alt cursor-pointer medium-icon mr-3" data-toggle="dropdown"></i>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+            {% include 'user_management/bookshelf/base_dropdown_bookshefl_choices.html' with action="move" %}
+        </div>
+        <i data-post-id="{{ book.pk }}" data-toggle="tooltip" data-placement="top" title="Elimina"
+           class="fas fa-trash site-red-text medium-icon cursor-pointer delete-book-icon"></i>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% comment %}
+    Pagina per la visualizzazione di un profilo che non esiste.
+{% endcomment %}
+
+{% block title %}{{ block.super }} {{ user_for_profile.username }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100  mb-5 shadow-lg">
+        <span class="font-7 text-danger">
+            A quanto pare {{ user_for_profile.username }} non ha ancora completato il proprio profilo utente.
+        </span>
+    </div>
+{% endblock %}

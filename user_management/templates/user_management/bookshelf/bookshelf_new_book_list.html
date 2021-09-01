@@ -1,0 +1,14 @@
+{% extends 'book_management/base_books_flat_list.html' %}
+
+{% comment %}
+    Template base per la lista di libri con le azioni di aggiunta.
+{% endcomment %}
+
+{% block book_actions %}
+    <div class="ml-5 d-flex align-items-center books-list-second-column">
+        <i class="fas fa-plus cursor-pointer mb-2" data-toggle="dropdown"></i>
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+            {% include 'user_management/bookshelf/base_dropdown_bookshefl_choices.html' with action="new" %}
+        </div>
+    </div>
+{% endblock %}

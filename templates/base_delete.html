@@ -1,0 +1,24 @@
+{% extends 'base_full_page_box.html' %}
+
+{% comment %}
+    Template base per l'eliminazione di elementi.
+{% endcomment %}
+
+{% block second_column_content %}
+    <div class="mb-2">
+        <h6 class="font-5">{% block delete_page_path %}{% endblock %}</h6>
+        <h5 class="font-6 mb-0">{% block delete_object_title %}{% endblock %}</h5>
+        <span class="text-muted font-5 mt-0">{% block delete_object_subtitle %}{% endblock %}</span>
+    </div>
+    <div class="d-flex column-flex align-items-start mt-4">
+        <div class="mb-3">
+            {% block delete_object_information %}{% endblock %}
+        </div>
+        <form method="post" class="d-flex align-items-center justify-content-between mt-4 site-flex-buttons">{% csrf_token %}
+            <input class="btn btn-danger w-100" type="submit" value="Elimina definitivamente">
+            <a class="site-link font-6 ml-3 mt-3 mt-lg-0" href="{% block cancel_button_url %}{% endblock %}">
+                Annulla
+            </a>
+        </form>
+    </div>
+{% endblock %}

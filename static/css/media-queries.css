@@ -1,0 +1,196 @@
+/* LARGE SCREEN */
+@media (max-width: 991px) {
+    #welcome-page-background {
+        background-position: center center;
+    }
+    .burger {
+        display: block !important;
+    }
+    .unnecessary-column {
+        display: none;
+    }
+    .vertical-line {
+        display: none;
+    }
+    .btn {
+        width: 100% !important;
+    }
+    .site-flex-buttons {
+        width: 100% !important;
+    }
+    .textinput {
+        width: 100% !important;
+    }
+    .site-box {
+        border-radius: 0;
+        margin-right: 0;
+        margin-left: 0;
+        padding: 15px !important;
+        width: 100% !important;
+    }
+    .site-btn-col {
+        margin-top: 10px;
+        margin-left: 0 !important;
+    }
+    #site-main-page {
+        margin-top: 0 !important;
+        padding: 0;
+    }
+    .shadow, .shadow-lg, .shadow-sm {
+        box-shadow: none !important;
+    }
+    .site-big-title {
+        font-size: 200%;
+    }
+    .comment-row {
+        margin-bottom: 10px;
+    }
+    .site-col {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 20px;
+    }
+    .site-attached-col {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    .small-btn {
+        width: auto !important;
+    }
+    .mobile-center {
+        justify-content: center !important;
+    }
+    .mobile-column-center {
+        align-items: center !important;
+    }
+    .mobile-top-no-margin {
+        margin-top: 0 !important;
+    }
+    .rounded-image {
+        border-radius: 50%;
+        height: 25%;
+        width: auto;
+    }
+    .nav-link-text {
+        display: none;
+    }
+    .nav-link-icon {
+        margin-right: 0 !important;
+    }
+    .nav-link {
+        margin-left: 0.7rem !important;
+        margin-right: 0.7rem !important;
+    }
+    .lg-only {
+        display: none !important;
+    }
+    .navbar-nav {
+        width: 100% !important;
+        align-items: center !important;
+    }
+    .navbar-brand {
+        margin-right: 0 !important;
+    }
+    .color-white-mobile {
+        color: white !important;
+    }
+    .site-light-blue-text-mobile {
+        color: #7eceed !important;
+    }
+    .xl-only {
+        display: none !important;
+    }
+    .site-flex-buttons {
+        flex-wrap: wrap;
+    }
+    .tooltip {
+        display: none; !important
+    }
+}
+
+/* LAPTOP */
+@media (max-width: 1024px) and (min-width: 992px){
+    .small-btn {
+        width: auto !important;
+    }
+    .textinput {
+        width: 75% !important;
+    }
+    .nav-link {
+        margin-left: 0.7rem !important;
+        margin-right: 0.7rem !important;
+    }
+}
+
+@media (min-width: 577px) {
+    .sm-only-text {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .sm-only {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .site-md-icon {
+        font-size: 150%;
+    }
+    .display-1 {
+        font-size: 4.5rem !important;
+        line-height: 1.2 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .list-group-item-progress-bar {
+        display: block !important;
+        margin-bottom: 0 !important;
+    }
+    .column-progress {
+        width: 100%;
+        margin-right: auto !important;
+        margin-left: auto !important;
+        margin-top: 10px !important;
+    }
+    .md-only-text {
+        display: none !important;
+    }
+    .display-1 {
+        font-size: 3.5rem !important;
+        line-height: 1.2 !important;
+    }
+}
+
+@media (max-width: 575px) {
+     .text-center-xs {
+        text-align: center !important;
+    }
+}
+
+/* EXTRA SMALL */
+@media (max-width: 350px) {
+    .list-group-item {
+        display: block !important;
+    }
+    .books-list-second-column {
+        justify-content: center !important;
+        margin-left: 0 !important;
+        margin-top: 10px !important;
+        margin-bottom: 20px !important;
+    }
+    .column-progress {
+        width: 100%;
+        margin-top: 10px;
+    }
+    hr {
+        display: block !important;
+    }
+    .display-1 {
+        font-size: 2.5rem !important;
+        line-height: 1.2 !important;
+    }
+}

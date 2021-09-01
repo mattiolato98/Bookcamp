@@ -1,0 +1,42 @@
+{% comment %}
+    Template base per le pillole di navigazione nel bookshelf.
+{% endcomment %}
+
+<nav class="nav nav-pills header-tabs flex-sm-row mb-0">
+    <a id="reading-link"
+       class="flex-sm-fill text-sm-center nav-link active site-btn-outline mr-4 cursor-pointer">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-book-reader mr-2 nav-link-icon"></i>
+            <span class="font-4 nav-link-text">
+                In lettura
+            </span>
+            <span class="font-4">&nbsp;
+                {{ profile.reading_books_set.count }}
+            </span>
+        </div>
+    </a>
+    <a id="read-link"
+       class="flex-sm-fill text-sm-center nav-link mr-4 ml-4 cursor-pointer">
+        <div class="d-flex align-items-center">
+            <i class="far fa-check-circle mr-2 nav-link-icon"></i>
+            <span class="font-4 nav-link-text">
+                Letti
+            </span>
+            <span class="font-4">&nbsp;
+                {{ profile.read_books_set.count }}
+            </span>
+        </div>
+    </a>
+    <a id="must-read-link"
+       class="flex-sm-fill text-sm-center nav-link ml-4 cursor-pointer">
+        <div class="d-flex align-items-center">
+            <i class="far fa-clock mr-2 nav-link-icon"></i>
+            <span class="font-4 nav-link-text">
+                Da leggere
+            </span>
+            <span class="font-4">&nbsp;
+                {{ profile.must_read_books_set.count }}
+            </span>
+        </div>
+    </a>
+</nav>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% comment %}
+    Template base con un unico blocco full width con tre colonne.
+{% endcomment %}
+
+{% block content %}
+    <div class="container-fluid site-box p-4 mb-3 bg-white w-100 shadow">
+        <div class="row">
+            <div class="col {% block first_column_classes %}{% endblock %}">
+                {% block first_column_content %}{% endblock %}
+            </div>
+            <div class="site-col col-lg-6 col-12">
+                {% block second_column_content %}{% endblock %}
+            </div>
+            <div class="col {% block third_column_classes %}{% endblock %}">
+                {% block third_column_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

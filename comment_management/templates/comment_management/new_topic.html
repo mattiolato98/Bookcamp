@@ -1,0 +1,27 @@
+{% extends 'comment_management/base_topic_form.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% comment %}
+    Pagina per l'inserimento di un nuovo topic.
+{% endcomment %}
+
+{% block title %}{{ block.super }} Nuovo Topic{% endblock %}
+
+{% block header %}
+    <div id="new-topic-header-background" class="row w-100 d-flex align-items-center justify-content-center shadow">
+        <span class="text-white text-center logo-font font-5 display-4 site-big-title">Crea un nuovo Topic</span>
+    </div>
+{% endblock %}
+
+{% block topic_form_path %}
+    <a class="site-link" href="{% url 'view-public-book' book.pk %}">{{ book.title|truncatewords:6 }}</a>
+    &nbsp;>&nbsp;
+    Nuovo topic
+{% endblock %}
+
+{% block topic_form_title %}Pubblica un nuovo Topic{% endblock %}
+{% block submit_button_value %}Pubblica{% endblock %}
+{% block submit_button_form_id %}new-topic-crispy-form{% endblock %}
+{% block cancel_button_url %}{% url 'view-public-book' book.pk %}{% endblock %}
