@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
@@ -73,7 +73,7 @@ def user_login_by_token(request, user_id_b64=None, user_token=None):
     Verifica che il token corrisponda a quello dell'utente che sta cercando di verifica la mail.
     """
     try:
-        uid = force_text(urlsafe_base64_decode(user_id_b64))
+        uid = force_str(urlsafe_base64_decode(user_id_b64))
         user = get_user_model().objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
         user = None
