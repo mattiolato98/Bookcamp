@@ -148,5 +148,3 @@ LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = '/user/login'
-
-SITE_ID = 1
