@@ -1,5 +1,5 @@
-from django.urls import path
 from book_management import views
+from django.urls import path
 
 app_name = 'book_management'
 
