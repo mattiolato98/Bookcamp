@@ -1,13 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView, FormView
 from django.views.generic.detail import SingleObjectMixin
 
+from books_base_folder.forms import SearchCrispyForm
 from book_management.decorators import profile_book_exists_only
 from book_management.models import Book
-from books_base_folder.forms import SearchCrispyForm
 from comment_management.models import Topic
 from user_management.decorators import has_profile_only
 from user_management.models import Profile, ProfileBook
