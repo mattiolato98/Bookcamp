@@ -15,7 +15,7 @@ from book_management.models import Book, Author
 
 class BookData:
     """
-    Classe per la gestione dei dati di un libro.
+    Manage book metadata.
     """
     isbn = None
     book = None
@@ -23,8 +23,8 @@ class BookData:
 
     def __init__(self, isbn):
         """
-        Inizializza i metadati del libro a partire dal suo isbn.
-        :param isbn: codice isbn_10 o isbn_13 del libro
+        Initialize book metadata starting from its ISBN code.
+        :param isbn: isbn_10 or isbn_13 code of the book
         """
         self.isbn = isbn
         try:
@@ -57,7 +57,7 @@ class BookData:
 
     def get_metadata(self):
         """
-        :return: Metadati del libro.
+        :return: Book metadata.
         """
         return self.metadata
 
@@ -65,9 +65,9 @@ class BookData:
 @login_required
 def ajax_search_book(request):
     """
-    Funzione chiamata da AJAX per scaricare i dati di un libro.
-    :param request: Richiesta AJAX.
-    :return: Metadati del libro.
+    Function called by Ajax to download book data.
+    :param request: Ajax request.
+    :return: Book metadata.
     """
     isbn = request.GET.get('isbn_code')
 
@@ -104,8 +104,8 @@ def ajax_search_book(request):
 
 class NewBookView(LoginRequiredMixin, FormView):
     """
-    View per l'inserimento di un nuovo libro.
-    Contiene il form NewBookCrispyForm.
+    New book creation view.
+    Contains the NewBookCrispyForm form.
     """
     template_name = 'book_management/new_book.html'
     form_class = NewBookCrispyForm
@@ -113,10 +113,10 @@ class NewBookView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         """
-        Recupera i metadati del libro prima di validare il form.
-        Se al codice isbn corrisponde un libro valido, ne viene creata l'istanza con i dati relativi.
-        Se il libro non viene trovato o ne esiste già l'istanza, viene ritornato un HttpServerError.
-        :return: HttpServerError se il libro esiste già o il codice isbn non corrisponde ad alcun libro valido.
+        Retrieve book metadata before validating the form.
+        If the ISBN code is associated with a book, it is instantiated with related data.
+        If the book is not found or the instance already exists, returns HttpServerError.
+        :return: HttpServerError if the book already exists or the ISBN code does not correspond to any book.
         """
         isbn = form.cleaned_data['isbn']
 
@@ -150,7 +150,7 @@ class NewBookView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         """
-        :return: success_url con la pagina del libro appena inserito.
+        :return: success_url with the page of the book just created.
         """
         return reverse_lazy('view-public-book', kwargs={'pk': self.book.pk})
 
