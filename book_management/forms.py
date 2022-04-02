@@ -5,9 +5,10 @@ from django import forms
 
 class NewBookCrispyForm(forms.Form):
     """
-    Form utilizzato per inserire un nuovo libro.
-    Campi:
-        - isbn
+    Form to create a new book.
+
+    Fields:
+        - ISBN code
     """
     helper = FormHelper()
     helper.form_id = 'new-book-crispy-form'
