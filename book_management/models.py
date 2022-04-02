@@ -10,9 +10,6 @@ import comment_management
 
 
 class Author(models.Model):
-    """
-    Model che contiene i dati di un autore.
-    """
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -20,9 +17,6 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    """
-    Model che contiene i dati di un libro.
-    """
     title = models.CharField(max_length=150)
     authors = models.ManyToManyField(Author, related_name="book_authors")
 
@@ -42,8 +36,7 @@ class Book(models.Model):
     @property
     def authors_str(self):
         """
-        Propery utilizzata per stampare l'elenco degli autori.
-        :return: Elenco degli autori separati da virgola.
+        :return: Authors' list separated by comma.
         """
         string = ""
         book_authors = self.authors.all()
@@ -59,14 +52,14 @@ class Book(models.Model):
     @property
     def authors_count(self):
         """
-        :return: Numero di autori del libro
+        :return: Book authors' number.
         """
         return self.authors.all().count()
 
     @property
     def average_rating(self):
         """
-        :return: Valutazione media degli utenti.
+        :return: Average rating of the book.
         """
         average_rating = self.profile_books.exclude(rating=None).aggregate(avg_rating=Avg('rating'))['avg_rating']
         return int(average_rating) if average_rating is not None else average_rating
@@ -74,35 +67,35 @@ class Book(models.Model):
     @property
     def number_of_ratings(self):
         """
-        :return: Numero di voti che ha ricevuto il libro.
+        :return: Number of ratings the book received.
         """
         return self.profile_books.exclude(rating=None).count()
 
     @property
     def people_reading_count(self):
         """
-        :return: Numero di persone che hanno letto il libro.
+        :return: Number of people who have read the book.
         """
         return self.profile_books.exclude(status='READ').exclude(status='MUSTREAD').count()
 
     @property
     def topics_count(self):
         """
-        :return: Numero di topic del libro.
+        :return: Number of book's Topics.
         """
         return self.topics.all().count()
 
     @property
     def topics_set(self):
         """
-        :return: Set dei topic del libro.
+        :return: Set of book's Topics.
         """
         return self.topics.all()
 
     @property
     def comments_set(self):
         """
-        :return: Set dei commenti relativi ai topic del libro.
+        :return: Set of comments related to the book's Topics.
         """
         topics = self.topics.all()
         return comment_management.models.Comment.objects.filter(topic__in=topics)
@@ -110,7 +103,7 @@ class Book(models.Model):
     @property
     def comments_count(self):
         """
-        :return: Numero di commenti relativi ai topic del libro.
+        :return: Number of comments related to the book's Topics.
         """
         count = 0
         for topic in self.topics.all():
@@ -120,29 +113,30 @@ class Book(models.Model):
     @property
     def is_top_5(self):
         """
-        :return: True se il libro è nella Top5, False altrimenti.
+        :return: True if the book is in the Top5, False otherwise.
         """
         return True if self in self.get_top_5() else False
 
     @staticmethod
     def get_top_5():
         """
-        Cerca i 5 libri più popolari. La ricerca è basata sul numero di topic pubblicati per ciascun libro.
-        :return: 5 libri più popolari ordinati per numero di topic decrescente.
+        Search 5 most popular books.
+        The search is based on the number of published Topics for each book.
+        :return: 5 most popular books ordered by number of Topics decreasing.
         """
         return Book.objects.all().annotate(num_topics=Count('topics')).order_by('-num_topics')[:5]
 
     @property
     def cover_image_file_is_default(self):
         """
-        :return: True se l'immagine di copertina è quella di default, False altrimenti.
+        :return: True if the cover image is the default, False otherwise.
         """
         return True if self.cover_image_file == self._meta.get_field('cover_image_file').get_default() else False
 
     def save(self, *args, **kwargs):
         """
-        Durante il salvataggio, controlla se è presente una cover_image_url.
-        In caso affermativo ne scarica l'immagine e la salva, assegnando il percorso al campo cover_image_file.
+        While saving, check if is present a cover_image_url.
+        If so, download the relative image and saves it, assigning the path to the field cover_image_file.
         """
         if self.cover_image_url and self.cover_image_file == self._meta.get_field('cover_image_file').get_default():
             img_temp = NamedTemporaryFile(delete=True)
