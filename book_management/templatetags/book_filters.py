@@ -6,10 +6,10 @@ from user_management.models import ProfileBook, Profile
 @register.filter
 def user_saved_book(book, user):
     """
-    Verifica se l'utente ha salvato il libro nel suo Bookshelf.
-    :param book: Oggetto Book.
-    :param user: Oggetto PlatformUser.
-    :return: True se l'utente ha salvato il libro, False altrimenti
+    Check if user has saved the book in his Bookshelf.
+    :param book: Book object.
+    :param user: PlatformUser object.
+    :return: True if the user has saved the book, False otherwise.
     """
     return ProfileBook.objects.filter(book_id=book.pk, profile_owner_id=user.profile.pk).exists()
 
@@ -17,10 +17,10 @@ def user_saved_book(book, user):
 @register.filter
 def get_user_book_status(book, user):
     """
-    Ritorna lo status del libro nel bookshelf dell'utente.
-    :param book: Oggetto Book.
-    :param user: Oggetto PlatformUser.
-    :return: Status del libro relativo all'utente.
+    Return book status in the user's bookshelf.
+    :param book: Book object.
+    :param user: PlatformUser object.
+    :return: Book status.
     """
     return ProfileBook.objects.get(book_id=book.pk, profile_owner_id=user.profile.pk).get_verbose_status
 
@@ -28,10 +28,10 @@ def get_user_book_status(book, user):
 @register.filter
 def user_rated_book(book, user):
     """
-    Verifica se l'utente ha o meno valutato il libro nel suo bookshelf.
-    :param book: Oggetto Book.
-    :param user: Oggetto PlatformUser.
-    :return: True se il libro è stato valutato, False altrimenti.
+    Check if the user has rated the book in his own bookshelf.
+    :param book: Book object.
+    :param user: PlatformUser object.
+    :return: True if the book has been rated, False otherwise.
     """
     return True if ProfileBook.objects.get(book_id=book.pk, profile_owner_id=user.profile.pk).rating is not None\
         else False
@@ -40,9 +40,9 @@ def user_rated_book(book, user):
 @register.filter
 def get_user_book_rating(book, user):
     """
-    Ritorna il rating del libro nel bookshelf dell'utente.
-    :param book: Oggetto Book.
-    :param user: Oggetto PlatformUser.
-    :return: Rating del libro relativo all'utente.
+    Return book rating in the user bookshelf.
+    :param book: Book object.
+    :param user: PlatformUser object.
+    :return: Book rating.
     """
     return ProfileBook.objects.get(book_id=book.pk, profile_owner_id=user.profile.pk).rating
