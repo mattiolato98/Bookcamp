@@ -4,8 +4,9 @@ from django import forms
 
 class SearchCrispyForm(forms.Form):
     """
-    Form per la ricerca di libri e profili.
-    Campi:
+    Form that provide site search engine.
+
+    Fields:
         - search
     """
     helper = FormHelper()
