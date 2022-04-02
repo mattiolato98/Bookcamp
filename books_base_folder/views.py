@@ -14,13 +14,13 @@ from user_management.models import Profile, ProfileBook
 
 class SearchMixin(object):
     """
-    Mixin per la ricerca di dati tramite query di ricerca.
+    Mixin to search data through search query.
     """
     def get_context_data(self, **kwargs):
         """
-        Scarica i libri e i profili corrispondenti alla query di ricerca. Non vengono scaricati utenti che non hanno
-        ancora completato il proprio profilo.
-        :return: libri e profili corrispondenti alla ricerca e query inserita dall'utente.
+        Download books and profiles matching the search query.
+        The users who do not have already completed their profile are not considered.
+        :return: books and profiles the search query.
         """
         context = super(SearchMixin, self).get_context_data(**kwargs)
 
@@ -52,13 +52,13 @@ class SearchMixin(object):
 
 class HomepageView(ListView):
     """
-    View della Homepage.
+    Homepage view.
     """
     template_name = 'homepage.html'
 
     def get_queryset(self):
         """
-        :return: 20 topic pubblicati più di recente dai profili seguiti dall'utente.
+        :return: 20 most recently published Topics from the user followed profiles.
         """
         if self.request.user.is_authenticated:
             followings = self.request.user.followed_profiles.all()
@@ -79,8 +79,8 @@ class GrassView(TemplateView):
 
 class SearchView(SearchMixin, FormView):
     """
-    View per la ricerca di libri e profili.
-    Contiene il form SearchCrispyForm.
+    View to search books and profiles.
+    Contains the SearchCrispyForm form.
     """
     template_name = "search_page.html"
     form_class = SearchCrispyForm
@@ -96,14 +96,14 @@ class SearchView(SearchMixin, FormView):
 
 class StatisticsView(TemplateView):
     """
-    View della pagina per la visualizzazione delle statistiche globali
+    Global statistics page view.
     """
     template_name = 'statistics.html'
 
     def get_context_data(self, **kwargs):
         """
-        Recupera i libri popolari e i profili popolari, per numero di topic e numero di commenti pubblicati.
-        :return: libri e profili popolari.
+        Retrieve popular books and profiles, by Topics number and published comments number.
+        :return: popular books and profiles.
         """
         context = super(StatisticsView, self).get_context_data(**kwargs)
 
@@ -123,22 +123,22 @@ class StatisticsView(TemplateView):
 
 class PublicBookPageView(SingleObjectMixin, ListView):
     """
-    View della pagina per la visualizzazione di un libro e dei topic relativi.
+    Public book page view, containing book information and book related Topics.
     """
     template_name = 'view_public_book.html'
     model = Topic
 
     def get(self, request, *args, **kwargs):
         """
-        Recupera l'oggetto libro.
+        Retrieve Book object.
         """
         self.object = Book.objects.get(pk=self.kwargs['pk'])
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
-        Salva l'oggetto libro recuperato nel context.
-        :return: Oggetto libro.
+        Saves Book object retrieved in the context.
+        :return: Book object.
         """
         context = super(PublicBookPageView, self).get_context_data(**kwargs)
         context['book'] = self.object
@@ -146,8 +146,8 @@ class PublicBookPageView(SingleObjectMixin, ListView):
 
     def get_queryset(self):
         """
-        Recupera la lista di topic relativi al libro della pagina.
-        :return: Lista di topic del libro scaricato nella get.
+        Retrieve Topics list related to the book.
+        :return: Topics list of the book retrieved in the get function.
         """
         return self.object.topics_set
 
@@ -158,7 +158,7 @@ class PrivateBookPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        Recupera l'oggetto Book.
+        Retrieve Book object.
         """
         context = super(PrivateBookPageView, self).get_context_data(**kwargs)
         context['book'] = Book.objects.get(pk=self.kwargs['pk'])
