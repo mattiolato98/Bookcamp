@@ -1,12 +1,11 @@
-from tempfile import NamedTemporaryFile
-from urllib.request import urlopen
+import comment_management
 
 from django.core.files import File
 from django.db import models
 from django.db.models import Count, Avg
-from django.utils.translation import gettext_lazy as _
 
-import comment_management
+from tempfile import NamedTemporaryFile
+from urllib.request import urlopen
 
 
 class Author(models.Model):
