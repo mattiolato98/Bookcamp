@@ -130,21 +130,15 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 AUTHENTICATION_BACKENDS = ['user_management.auth.EmailOrUsernameModelBackend']
-
 AUTH_USER_MODEL = 'user_management.PlatformUser'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
 LOGIN_URL = '/user/login'
-
 LOGIN_REDIRECT_URL = 'home'
-
 LOGOUT_REDIRECT_URL = '/user/login'
