@@ -7,8 +7,9 @@ from comment_management.models import Topic, Comment
 
 class NewTopicCrispyForm(forms.ModelForm):
     """
-    Form per l'inserimento di un nuovo topic.
-    Campi:
+    Form to create a new Topic.
+
+    Fields:
         - title
         - message
     """
@@ -34,8 +35,9 @@ class NewTopicCrispyForm(forms.ModelForm):
 
 class UpdateTopicCrispyForm(forms.ModelForm):
     """
-    Form per l'update di un topic.
-    Campi:
+    Form to update an existing Topic.
+
+    Fields:
         - title
         - message
     """
@@ -61,8 +63,9 @@ class UpdateTopicCrispyForm(forms.ModelForm):
 
 class InsertCommentCrispyForm(forms.ModelForm):
     """
-    Form per l'inserimento di un nuovo commento.
-    Campi:
+    Form to create a new Comment.
+
+    Fields:
         - message
     """
     helper = FormHelper()
