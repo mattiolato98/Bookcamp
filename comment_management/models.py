@@ -8,9 +8,6 @@ from tinymce import models as tinymce_models
 
 
 class Topic(models.Model):
-    """
-    Model che contiene i dati di un topic.
-    """
     user_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="topics")
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="topics", null=True, blank=True)
 
@@ -26,38 +23,38 @@ class Topic(models.Model):
     @property
     def likes_count(self):
         """
-        :return: Numero di like del topic.
+        :return: Topic number of Likes.
         """
         return self.likes.all().count()
 
     @property
     def bookmarks_count(self):
         """
-        :return: Numero di salvataggi del topic.
+        :return: Topic number of Bookmarks.
         """
         return self.bookmarks.all().count()
 
     @property
     def comments_count(self):
         """
-        :return: Numero di commenti del topic.
+        :return: Topic number of comments.
         """
         return self.comments.all().count()
 
     @property
     def comments_set(self):
         """
-        :return: Set di commenti relativi al topic.
+        :return: Set of comments of the Topic.
         """
         return self.comments.all()
 
     def clean(self):
         """
-        Pulisce il campo message da tag non autorizzati. Questo previene eventuali errori in visualizzazione
-        nel momento in cui il messaggio verrà renderizzato nella pagina.
-        I tag permessi sono presenti nella lista tags.
-        Gli attributi permessi sono presenti nella lista attrs.
-        Gli stili permessi sono presenti nella lista styles.
+        Clean the message field from unauthorized tags. This prevent errors in visualization when
+        the message will be rendered in the frontend.
+        Allowed tags are present in the tags list.
+        Allowed attributes are present in the attrs dictionary.
+        Allowed styles are present in the styles list.
         """
         tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'p', 'br', 'span', 'code', 'em', 'i', 'li', 'ol',
                 'strong', 'ul', 'b', 'abbr']
@@ -77,15 +74,12 @@ class Topic(models.Model):
 
     class Meta:
         """
-        Ordine decrescente per pk (ultimo inserito per primo)
+        Order by pk decreasing (LIFO)
         """
         ordering = ['-pk', ]
 
 
 class Comment(models.Model):
-    """
-    Model che contiene i dati di un commento.
-    """
     user_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
 
@@ -98,9 +92,6 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    """
-    Model che contiene i dati di un like.
-    """
     user_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")
     creation_date_time = models.DateTimeField(auto_now_add=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="likes", null=True, blank=True)
@@ -110,15 +101,12 @@ class Like(models.Model):
 
     class Meta:
         """
-        Un utente può mettere mi piace a un topic al più una volta.
+        A user can't like a Topic more than once.
         """
         unique_together = ["user_owner", "topic"]
 
 
 class Bookmark(models.Model):
-    """
-    Model che contiene i dati di un salvataggio.
-    """
     user_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                    related_name="bookmarks")
     creation_date_time = models.DateTimeField(auto_now_add=True)
@@ -129,6 +117,6 @@ class Bookmark(models.Model):
 
     class Meta:
         """
-        Un utente può salvare un topic al più una volta.
+        A user can't save a Topic more than once.
         """
         unique_together = ["user_owner", "topic"]
