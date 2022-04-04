@@ -5,7 +5,7 @@ from comment_management.models import Topic, Comment
 
 def topic_owner_only(func):
     """
-    Decoratore per negare l'accesso a utenti non proprietari del topic.
+    Decorator that deny the access to users not owners of the Topic.
     """
     def check_and_call(request, *args, **kwargs):
         topic = Topic.objects.get(pk=kwargs['pk'])
@@ -17,7 +17,7 @@ def topic_owner_only(func):
 
 def comment_owner_only(func):
     """
-    Decoratore per negare l'accesso a utenti non proprietari del commento.
+    Decorator that deny the access to users not owners of the Comment.
     """
     def check_and_call(request, *args, **kwargs):
         comment = Comment.objects.get(pk=kwargs['pk'])
