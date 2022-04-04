@@ -1,9 +1,9 @@
 <script type="text/javascript">
     /**
-     * Richiesta Ajax per salvare il like di un utente.
-     * success: Chiama la funzione fillLike per la gestione dell'icona.
-     * @param topic_pk Chiave primaria del topic su cui è stato premuto il tasto like.
-     * @param icon_clicked Icona like cliccata dall'utente.
+     * Ajax request to save a user Like.
+     * success: Calls the function fillLike() to manage the icon.
+     * @param topic_ppk Primary key of the Topic on which the Like button has been pressed.
+     * @param icon_clicked Like icon clicked by the user.
      *
      */
     function ajaxSaveLike(topic_pk, icon_clicked) {
@@ -28,10 +28,10 @@
     }
 
     /**
-     * Richiesta Ajax per salvare il bookmark di un utente.
-     * success: Chiama la funzione fillBookmark per la gestione dell'icona.
-     * @param topic_pk Chiave primaria del topic su cui è stato premuto il tasto bookmark.
-     * @param icon_clicked Icona bookmark cliccata dall'utente.
+     * Ajax request to save a bookmark.
+     * success: Calls the function fillBookmark() to manage the icon.
+     * @param topic_pk Primary key of the Topic on which the Bookmark button hase been pressed.
+     * @param icon_clicked Bookmark icon clicked by the user.
      *
      */
     function ajaxSaveBookmark(topic_pk, icon_clicked) {

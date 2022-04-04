@@ -4,10 +4,10 @@
 {% load crispy_forms_tags %}
 
 {% comment %}
-    Pagina per la visualizzazione di un topic. Contiene:
-        - Topic
-        - Lista dei commenti associati
-        - Form di inserimento di un nuovo commento
+    Topic viewing page. It contains:
+        - Topic object
+        - Associated comment list
+        - Comment creation form
 {% endcomment %}
 
 {% block title %}{{ block.super }} Topic di {{ topic.user_owner.username }}{% endblock %}
