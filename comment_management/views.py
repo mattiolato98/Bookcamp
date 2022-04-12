@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
@@ -19,11 +19,13 @@ from comment_management.models import Comment, Like, Bookmark, Topic
 @csrf_protect
 def ajax_save_like(request):
     """
-    Funzione chiamata da Ajax per salvare un like.
-    Riceve una pk di un topic. Verifica se è già presente un like per l'utente della request appartenente a tale topic:
-        - in caso affermativo lo elimina (l'utente sta cercando di rimuovere il like)
-        - alternativamente lo aggiunge (l'utente sta cercando di aggiungere il like)
-    :return: Booleano indicante se il like è stato aggiunto o rimosso, numero di like del topic dopo l'operazione.
+    Ajax called function to save a Like.
+    It receives a Topic pk. It checks if a Like for the request user on the Topic already exists:
+        - if so, it takes it off
+        - otherwise, it adds it
+    :return:
+        - selected: boolean value, True if the Like has been added, False otherwise
+        - likes_count: number of likes of the Topic after the operation
     """
     topic_id = request.POST.get('topic_primary_key')
     selected = False
@@ -51,12 +53,11 @@ def ajax_save_like(request):
 @csrf_protect
 def ajax_save_bookmark(request):
     """
-     Funzione chiamata da Ajax per salvare un bookmark.
-     Riceve una pk di un topic.
-     Verifica se è già presente un bookmark per l'utente della request appartenente a tale topic:
-         - in caso affermativo lo elimina (l'utente sta cercando di rimuovere il bookmark)
-         - alternativamente lo aggiunge (l'utente sta cercando di aggiungere il bookmark)
-     :return: Booleano indicante se il bookmark è stato aggiunto o rimosso.
+    Ajax called function to save a Bookmark.
+    It receives a Topic pk. It checks if a Bookmark for the request user on the Topic already exists:
+        - if so, it takes it off
+        - otherwise, it adds it
+     :return: boolean value, True if the Bookmark has been added, False otherwise.
      """
     topic_id = request.POST.get('topic_primary_key')
     selected = False
@@ -78,16 +79,16 @@ def ajax_save_bookmark(request):
 
 class NewTopicView(LoginRequiredMixin, CreateView):
     """
-    View per l'inserimento di un nuovo Topic.
-    Contiene il form NewTopicCrispyForm.
+    Topic CreateView.
+    It contains NewTopicCrispyForm.
     """
     form_class = NewTopicCrispyForm
     template_name = 'comment_management/new_topic.html'
 
     def get_context_data(self, **kwargs):
         """
-        Recupera i dati del libro su cui si sta cercando di pubblicare un topic.
-        :return: Oggetto Book.
+        Retrieves book data on which you are trying to post a Topic.
+        :return: Book object.
         """
         context = super(NewTopicView, self).get_context_data(**kwargs)
         context['book'] = Book.objects.get(pk=self.kwargs['pk'])
@@ -96,7 +97,7 @@ class NewTopicView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """
-        Raccoglie le informazioni necessarie a completare l'inserimento.
+        Collects additional data needed to complete the operation.
         """
         self.object = form.save(commit=False)
         self.object.user_owner_id = self.request.user.pk
@@ -107,7 +108,7 @@ class NewTopicView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """
-        :return: redirect verso pagina 'view-book' del libro relativo al topic appena aggiunto.
+        :return: redirect towards the page 'view-book' of the book related to the just added Topic.
         """
         return reverse_lazy('view-public-book', kwargs={'pk': self.kwargs['pk']})
 
@@ -115,8 +116,8 @@ class NewTopicView(LoginRequiredMixin, CreateView):
 @method_decorator(topic_owner_only, name='dispatch')
 class UpdateTopicView(LoginRequiredMixin, UpdateView):
     """
-    View per la modifica di un Topic.
-    Contiene il form UpdateTopicCrispyForm.
+    Topic UpdateView.
+    It contains UpdateTopicCrispyForm.
     """
     model = Topic
     form_class = UpdateTopicCrispyForm
@@ -124,8 +125,8 @@ class UpdateTopicView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         """
-        Recupera i dati del libro su cui è pubblicato il topic.
-        :return: Oggetto Book.
+        Retrieves book data on which the Topic is published.
+        :return: Book object.
         """
         context = super(UpdateTopicView, self).get_context_data(**kwargs)
         book_pk = Topic.objects.get(pk=self.kwargs['pk']).book_id
@@ -135,7 +136,7 @@ class UpdateTopicView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """
-        :return: redirect alla pagina 'view-topic' del topic modificato.
+        :return: redirect towards the page 'view-topic' of the updated Topic.
         """
         return reverse_lazy('comment_management:view-topic', kwargs={'pk': self.kwargs['pk']})
 
@@ -143,28 +144,28 @@ class UpdateTopicView(LoginRequiredMixin, UpdateView):
 @method_decorator(topic_owner_only, name='dispatch')
 class DeleteTopicView(LoginRequiredMixin, DeleteView):
     """
-    View per l'eliminazione di un Topic.
+    Topic DeleteView.
     """
     model = Topic
     template_name = 'comment_management/delete_topic.html'
 
     def get_success_url(self):
         """
-        :return: redirect verso la pagina 'view-profile' dell'utente che fa richiesta.
+        :return: redirect towards the page 'view-profile' of the requesting user.
         """
         return reverse_lazy('user_management:view-profile', kwargs={'pk': self.request.user.pk})
 
 
 class TopicNewComment(LoginRequiredMixin, CreateView):
     """
-    View per l'inserimento di un nuovo commento.
-    Contiene il form InsertCommentCrispyForm.
+    Comment CreateView.
+    It contains InsertCommentCrispyForm.
     """
     form_class = InsertCommentCrispyForm
 
     def form_valid(self, form):
         """
-        Raccoglie le informazioni necessarie a completare l'inserimento.
+        Collects additional data needed to complete the operation.
         """
         self.object = form.save(commit=False)
         self.object.user_owner_id = self.request.user.pk
@@ -175,29 +176,29 @@ class TopicNewComment(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         """
-        :return: redirect verso la pagina 'view-topic' del topic relativo al commento appena pubblicato.
+        :return: redirect towards the page 'view-topic' of the comment related Topic.
         """
         return reverse_lazy('comment_management:view-topic', kwargs={'pk': self.kwargs['pk']})
 
 
 class CommentsList(SingleObjectMixin, ListView):
     """
-    View per la visualizzazione della lista di commenti di un topic.
+    Comment ListView.
     """
     template_name = 'comment_management/view_topic.html'
     model = Comment
 
     def get(self, request, *args, **kwargs):
         """
-        Recupera l'oggetto topic.
-        :return: Oggetto Topic.
+        Retrieves Topic object.
+        :return: Topic object.
         """
         self.object = Topic.objects.get(pk=self.kwargs['pk'])
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
-        Salva l'oggetto topic e il form nel context.
+        Saves Topic object and form in the context.
         """
         context = super(CommentsList, self).get_context_data(**kwargs)
         context['topic'] = self.object
@@ -206,16 +207,15 @@ class CommentsList(SingleObjectMixin, ListView):
 
     def get_queryset(self):
         """
-        Recupera la lista di commenti del topic.
-        :return: Lista di oggetti Comment.
+        Retrieves Topic comment list.
+        :return: Comment object list.
         """
         return self.object.comments_set
 
 
 class TopicPageView(View):
     """
-    View della pagina per la visualizzazione di un topic, della lista dei suoi commenti.
-    Fornisce un form per l'inserimento di un nuovo commento.
+    Topic View, containing the Topic, the related comment list and the form to add a new comment.
     """
     def get(self, request, *args, **kwargs):
         view = CommentsList.as_view()
@@ -229,15 +229,15 @@ class TopicPageView(View):
 @method_decorator(comment_owner_only, name='dispatch')
 class DeleteCommentView(LoginRequiredMixin, DeleteView):
     """
-    View per l'eliminazione di un commento.
+    Comment DeleteView.
     """
     model = Comment
     template_name = 'comment_management/delete_comment.html'
 
     def get_context_data(self, **kwargs):
         """
-        Salva nel context oggetto Topic del commento che si sta cercando di eliminare.
-        :return: Oggetto Topic.
+        Saves Topic object of the comment you are trying to delete in the context.
+        :return: Topic object.
         """
         context = super(DeleteCommentView, self).get_context_data(**kwargs)
         context['topic'] = self.object.topic
@@ -245,6 +245,6 @@ class DeleteCommentView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         """
-        :return: redirect alla pagina 'view-topic' del topic relativo al commento appena eliminato.
+        :return: redirect towards the page 'view-topic' of the Topic related to the just deleted comment.
         """
         return reverse_lazy('comment_management:view-topic', kwargs={'pk': self.object.topic_id})
