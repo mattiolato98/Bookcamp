@@ -10,26 +10,21 @@ from comment_management.models import Topic, Comment
 
 class TopicPageViewTest(TestCase):
     """
-    Test della View 'TopicPageView'.
+    TopicPageView tests.
     """
 
     def setUp(self):
         """
-        Setup di un ambiente di test. Crea i seguenti oggetti a scopo di test:
-            - Utente
-            - Autore
-            - Libro
-            - Topic
-        :return:
+        Test environment setup. 
         """
         self.client = Client()
         self.user = get_user_model().objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-        self.author = Author.objects.create(name="Autore di prova")
+        self.author = Author.objects.create(name="Test author")
         self.book = Book.objects.create(
-            title="Libro di prova",
-            publisher="Editore di prova",
+            title="Test book",
+            publisher="Test publisher",
             year="2020",
-            language="Italiano",
+            language="English",
             isbn_10="1234567890",
             isbn_13="1234567890123",
         )
@@ -39,20 +34,20 @@ class TopicPageViewTest(TestCase):
         self.topic = Topic.objects.create(
             user_owner=self.user,
             book=self.book,
-            title="Topic di prova",
-            message="Messagio di prova",
+            title="Test topic",
+            message="Test message",
             creation_date_time=now(),
             last_modified_date_time=now(),
         )
 
     def test_topic_page_view_comments_list_user_owner_of_topic_GET(self):
         """
-        Test della GET della pagina con utente proprietario del topic.
+        Test page GET with user owner of the Topic. 
         """
         comment = Comment.objects.create(
             user_owner=self.user,
             topic=self.topic,
-            message="Commento di prova",
+            message="Test comment",
             creation_date_time=now(),
         )
 
@@ -73,7 +68,7 @@ class TopicPageViewTest(TestCase):
 
     def test_topic_page_view_comments_list_empty_GET(self):
         """
-        Test della GET della pagina con utente non loggato e lista dei commenti vuota.
+        Test page GET with user not logged in and empty comment list.
         """
         response = self.client.get(reverse('comment_management:view-topic', kwargs={'pk': self.topic.pk}))
         self.assertEquals(response.status_code, 200)
@@ -83,10 +78,10 @@ class TopicPageViewTest(TestCase):
 
     def test_topic_page_view_comments_list_user_not_owner_of_topic_GET(self):
         """
-        Test della GET della pagina con utente NON proprietario del topic.
+        Test page GET with user not owner of the Topic.
         """
-        user = get_user_model().objects.create_user('utente', 'utente@mail.com', 'utentepassword')
-        self.client.login(username='utente', password='utentepassword')
+        user = get_user_model().objects.create_user('user', 'user@mail.com', 'password')
+        self.client.login(username='user', password='password')
 
         response = self.client.get(reverse('comment_management:view-topic', kwargs={'pk': self.topic.pk}))
         self.assertEquals(response.status_code, 200)
@@ -96,10 +91,10 @@ class TopicPageViewTest(TestCase):
 
     def test_topic_page_view_new_comment_POST(self):
         """
-        Test della POST della pagina con utente loggato.
+        Test page POST with user logged in.
         """
         data = {
-            'message': 'Commento di prova POST',
+            'message': 'Test comment POST',
         }
 
         self.client.login(username='john', password='johnpassword')
@@ -109,14 +104,14 @@ class TopicPageViewTest(TestCase):
 
         self.assertEquals(Comment.objects.filter(topic_id=self.topic.pk).count(), 1)
         self.assertEquals(self.topic.comments_count, 1)
-        self.assertEquals(Comment.objects.get(message='Commento di prova POST').user_owner, self.user)
+        self.assertEquals(Comment.objects.get(message='Test comment POST').user_owner, self.user)
 
     def test_topic_page_view_new_comment_user_not_logged_in_POST(self):
         """
-        Test della POST della pagina con utente NON loggato.
+        Test page POST with user not logged in.
         """
         data = {
-            'message': 'Commento di prova POST',
+            'message': 'Test comment POST',
         }
 
         response = self.client.post(reverse('comment_management:view-topic', kwargs={'pk': self.topic.pk}), data=data)
@@ -124,30 +119,26 @@ class TopicPageViewTest(TestCase):
 
         self.assertEquals(Comment.objects.filter(topic_id=self.topic.pk).count(), 0)
         self.assertEquals(self.topic.comments_count, 0)
-        self.assertEquals(Comment.objects.filter(message='Commento di prova POST').count(), 0)
+        self.assertEquals(Comment.objects.filter(message='Test comment POST').count(), 0)
 
 
 class AjaxSaveLikeTest(TestCase):
     """
-    Test della funzione Ajax 'ajax_save_like'
+    Test Ajax funcion 'ajax_save_like'.
     """
 
     def setUp(self):
         """
-         Setup di un ambiente di test. Crea i seguenti oggetti a scopo di test:
-            - Utente
-            - Autore
-            - Libro
-            - Topic
+        Test environment setup.
         """
         self.client = Client()
         self.user = get_user_model().objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-        self.author = Author.objects.create(name="Autore di prova")
+        self.author = Author.objects.create(name="Test author")
         self.book = Book.objects.create(
-            title="Libro di prova",
-            publisher="Editore di prova",
+            title="Test book",
+            publisher="Test publisher",
             year="2020",
-            language="Italiano",
+            language="English",
             isbn_10="1234567890",
             isbn_13="1234567890123",
         )
@@ -157,15 +148,15 @@ class AjaxSaveLikeTest(TestCase):
         self.topic = Topic.objects.create(
             user_owner=self.user,
             book=self.book,
-            title="Topic di prova",
-            message="Messagio di prova",
+            title="Test topic",
+            message="Test message",
             creation_date_time=now(),
             last_modified_date_time=now(),
         )
 
     def test_ajax_save_like_POST(self):
         """
-        Test della POST con utente loggato.
+        Test POST with user logged in.
         """
         data = {
             'topic_primary_key': self.topic.pk,
@@ -180,7 +171,7 @@ class AjaxSaveLikeTest(TestCase):
 
     def test_ajax_save_like_user_not_logged_in_POST(self):
         """
-        Test della POST con utente NON loggato.
+        Test POST with user not logged in.
         """
         data = {
             'topic_primary_key': self.topic.pk,
