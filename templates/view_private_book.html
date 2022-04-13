@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load book_filters %}
 
+{% comment %}
+    Book private information page.
+{% endcomment %}
+
 {% block title %}{{ block.super }} {{ book.title }} di {{ user.username }}{% endblock %}
 
 {% block header %}
