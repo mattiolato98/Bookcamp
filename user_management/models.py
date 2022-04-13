@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import date
 
 from PIL import Image
@@ -66,7 +67,7 @@ class PlatformUser(AbstractUser):
         """
         comments = self.comments.all().order_by('-creation_date_time', 'topic__book')
 
-        comments_group_by_book = {comment.topic.book: [] for comment in comments}
+        comments_group_by_book = defaultdict(list)
         for comment in comments:
             comments_group_by_book[comment.topic.book].append(comment)
 
