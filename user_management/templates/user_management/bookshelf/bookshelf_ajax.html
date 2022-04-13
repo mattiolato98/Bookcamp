@@ -1,9 +1,9 @@
 <script type="text/javascript">
     /**
-     * Richiesta Ajax per eliminare un libro dal bookshelf di un utente.
-     * success: Chiama removeBook per rimuovere la riga dall'ambiente grafico.
-     * @param book_pk Chiave primaria del libro che si vuole eliminare dal bookshelf.
-     * @param link_clicked Link cliccato dall'utente.
+     * Ajax request to delete a book from the user Bookshelf.
+     * success: Calls removeBook to graphically remove the row.
+     * @param book_pk Book to delete pk.
+     * @param link_clicked User clicked link.
      */
     function ajaxDeleteBook(book_pk, link_clicked) {
         let $row = link_clicked.closest('.bookshelf-element');
@@ -28,11 +28,11 @@
     }
 
     /**
-     * Richiesta Ajax per spostare un libro nel bookshelf da una categoria a un'altra.
-     * success: Chiama removeBook per rimuovere la riga dall'ambiente grafico.
-     * @param book_pk Chiave primaria del libro che si vuole spostare.
-     * @param move_to Stringa rappresentante la categoria in cui spostare il libro.
-     * @param link_clicked Link cliccato dall'utente.
+     * Ajax request to move a book in the user Bookshelf from a category to another.
+     * success: Calls removeBook to grephically remove the row.
+     * @param book_pk Book to move pk.
+     * @param move_to String, it represents the category to which to move the book.
+     * @param link_clicked User clicked link.
      */
     function ajaxMoveBook(book_pk, move_to, link_clicked) {
         let $row = link_clicked.closest('.bookshelf-element');
@@ -57,11 +57,11 @@
     }
 
     /**
-     * Richiesta Ajax per inserire un nuovo libro nel bookshelf.
-     * success: Chiama removeBook per rimuovere la riga dall'ambiente grafico.
-     * @param book_pk Chiave primaria del libro che si vuole aggiungere.
-     * @param move_to Stringa rappresentante la categoria in cui inserire il libro.
-     * @param link_clicked Link cliccato dall'utente.
+     * Ajax request to insert a new book in the Bookshelf.
+     * success: Calls removeBook to graphically remove the row.
+     * @param book_pk Book to insert pk.
+     * @param move_to String, it represents the category to which to move the book.
+     * @param link_clicked User clicked link.
      */
     function ajaxNewBook(book_pk, move_to, link_clicked) {
         let $row = link_clicked.closest('.bookshelf-element');

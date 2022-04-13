@@ -1,8 +1,7 @@
 <script type="text/javascript">
     /**
-     * Richiesta Ajax per il controllo dello username già esistente.
-     * success: se lo username esiste già mostra un errore all'utente, altrimento rimuove il messaggio di errore
-     * se era presente.
+     * Ajax request to find out if a username already exists.
+     * success: shows an error if the username already exists, otherwise removes the error message if it was present.
      */
     $('#id_username').on('change', function () {
         $.ajax({

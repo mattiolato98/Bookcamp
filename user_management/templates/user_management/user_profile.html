@@ -4,7 +4,7 @@
 {% load user_filters %}
 
 {% comment %}
-    Pagina per la visualizzazione di un profilo.
+    Profile page.
 {% endcomment %}
 
 {% block title %}{{ block.super }} {{ user_for_profile.username|truncatechars:30 }}{% endblock %}
