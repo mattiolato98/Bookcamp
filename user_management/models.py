@@ -1,13 +1,13 @@
-from datetime import datetime, date
+from datetime import date
 
 from PIL import Image
+
 from django.conf import settings
 from django.contrib.auth.models import User, AbstractUser
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Count
-
 from django.utils.translation import gettext_lazy as _
 
 from book_management.models import Book
