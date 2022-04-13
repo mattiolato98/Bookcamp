@@ -10,7 +10,13 @@ from user_management.models import Profile, ProfileBook
 
 class PlatformUserCreationForm(UserCreationForm):
     """
-    Form per la creazione di un PlatformUser.
+    Form to create a PlatformUser.
+
+    Fields:
+        - username
+        - email
+        - password1
+        - password2
     """
     helper = FormHelper()
     email = forms.EmailField(required=True)
@@ -31,15 +37,16 @@ class PlatformUserCreationForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     """
-    Form per il login di un utente.
+    Login form.
     """
     helper = FormHelper()
 
 
 class CreateProfileCrispyForm(forms.ModelForm):
     """
-    Form per la creazione di un profilo.
-    Campi:
+    Form to create a Profile.
+
+    Fields:
         - picture
         - first_name
         - last_name
@@ -90,8 +97,9 @@ class CreateProfileCrispyForm(forms.ModelForm):
 
 class UpdateProfileCrispyForm(forms.ModelForm):
     """
-    Form per la modifica di un profilo.
-    Campi:
+    Form to update a Profile.
+
+    Fields:
         - first_name
         - last_name
         - description
@@ -135,8 +143,9 @@ class UpdateProfileCrispyForm(forms.ModelForm):
 
 class UpdateProfilePictureCrispyForm(forms.ModelForm):
     """
-    Form per la modifica dell'immagine di un profilo.
-    Campi:
+    Form to update profile picture.
+
+    Fields:
         - picture
     """
     helper = FormHelper()
@@ -151,8 +160,9 @@ class UpdateProfilePictureCrispyForm(forms.ModelForm):
 
 class UpdatePasswordCrispyForm(UserCreationForm):
     """
-    Form per la modifica della password dell'utente.
-    Campi:
+    Form to update the password.
+
+    Fields:
         - old_password
         - new_password_1
         - new_password_2
@@ -193,8 +203,9 @@ class UpdatePasswordCrispyForm(UserCreationForm):
 
 class SearchBookCrispyForm(forms.Form):
     """
-    Form per la ricerca di libri.
-    Campi:
+    Form to search books.
+
+    Fields:
         - search
     """
     helper = FormHelper()
