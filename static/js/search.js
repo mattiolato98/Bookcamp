@@ -1,8 +1,8 @@
 /**
- * Funzione per cambiare pulsante attivo nell'header della ricerca.
- * @param {HTMLAnchorElement} $element - tab cliccato dall'utente.
- * @param {String} hideClassName - nome della classe di cui nascondere gli elementi.
- * @param {String} showClassName - nome della classe di cui mostrare gli elementi.
+ * Function to change active button in the search header.
+ * @param {HTMLAnchorElement} $element - User clicked tab.
+ * @param {String} hideClassName - Elements to hide classname.
+ * @param {String} showClassName - Elements to show classname.
  */
 function changeHeaderTab($element, hideClassName, showClassName) {
     $('.' + hideClassName).hide();
@@ -16,9 +16,6 @@ function changeHeaderTab($element, hideClassName, showClassName) {
     $element.addClass('site-btn-outline');
 }
 
-/**
- * Inizializza la pagina con varie operazioni.
- */
 function initPage() {
     let search_bar = $('#search-bar');
 
@@ -29,14 +26,14 @@ function initPage() {
 $(function () {
     initPage();
 
-    /** EventListener on clik del pulsante "Libri" dell'header della ricerca. */
+    /** EventListener on clik of the button Books in the search header. */
     $('#search-header-libri').on('click', function () {
         let hideClassName = 'search-list-users';
         let showClassName = 'search-list-books';
         changeHeaderTab($(this), hideClassName, showClassName);
     });
 
-    /** EventListener on clike del pulsante "Utenti" dell'header della ricerca. */
+    /** EventListener on clike of the button Users in the search header. */
     $('#search-header-utenti').on('click', function () {
         let hideClassName = 'search-list-books';
         let showClassName = 'search-list-users';

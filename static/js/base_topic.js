@@ -1,8 +1,8 @@
 /**
- * Riempie o svuota l'icona like a seconda del valore di data.selected. Aggiorna inoltre il numero di like.
- * Chiamata dalla richiesta Ajax ajaxSaveLike.
- * @param data Dati ritornati da Ajax.
- * @param $like_icon icona premuta dall'utente.
+ * Fills or empties Like icon, based on data.selected value and updates Likes number.
+ * Called by Ajax request ajaxSaveLike.
+ * @param data Ajax returned data.
+ * @param $like_icon user clicked icon.
  */
 function fillLike(data, $like_icon) {
     if(data.selected) {
@@ -17,10 +17,10 @@ function fillLike(data, $like_icon) {
 }
 
 /**
- * Riempie o svuota l'icona bookmark a seconda del valore di data.selected.
- * Chiamata dalla richiesta Ajax ajaxSaveBookmark.
- * @param data Dati ritornati da Ajax.
- * @param $bookmark_icon icona premuta dall'utente.
+ * Fills or empties Bookmark icon, based on data.selected value.
+ * Called by Ajax request ajaxSaveBookmark.
+ * @param data Ajax returned data.
+ * @param $bookmark_icon user clicked icon.
  */
 function fillBookmark(data, $bookmark_icon) {
     if (data.selected) {
@@ -35,13 +35,13 @@ function fillBookmark(data, $bookmark_icon) {
 $(function () {
     $('[data-toggle="tooltip"]').tooltip(); // Setup dei tooltip nella pagina.
 
-    /** Event listener on click dell'icona like. */
+    /** Event listener on click of Like icon. */
     $('.like-icon').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxSaveLike(pk, $(this));
     });
 
-    /** Event listener on click dell'icona bookmark. */
+    /** Event listener on click of Bookmark icon. */
     $('.bookmark-icon').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxSaveBookmark(pk, $(this));

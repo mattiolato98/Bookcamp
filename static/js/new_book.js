@@ -1,7 +1,7 @@
 /**
- * Popolazione della pagina con i dati del libro.
- * Chiamata dalla richiesta Ajax ajaxSearchBook.
- * @param data Dati del libro scaricati.
+ * Populates the page with book data.
+ * Called by Ajax request ajaxSearchBook.
+ * @param data downloaded book data.
  */
 function fillBookData(data) {
     let bookNotFoundMessage = $('#new-book-not-found-message');
@@ -16,7 +16,7 @@ function fillBookData(data) {
         $('.book-found').show();
 
         if (data.has_cover_image) {
-            date = new Date(); // Necessario per forzare l'aggiornamento  dell'immagine
+            date = new Date(); // Needed to force the image update.
             bookCoverImage.attr('src', '/static/img/book.jpeg?' + date.getTime());
         }
         else {
@@ -65,8 +65,7 @@ function fillBookDataError() {
 }
 
 $(function () {
-    // Disabilita il pulsante submit, prevenendo la conferma del form col il pulsante invio quando ancora nessun libro
-    // è stato trovato
+    // Disable submit button, preventing the form confirmation with Enter button before a book has been found.
     $('#new-book-submit-button').attr('type', '');
 
     /** Event listener on click del pulsante Cerca del Form di inserimento di un nuovo libro */

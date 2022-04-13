@@ -1,5 +1,5 @@
 $(function () {
-    /** Event listener on click del pulsante Leggi tutto di un testo troncato. */
+    /** Event listener on click of the button Read more of a truncated text. */
     $('.text-show-more').on('click', function () {
         $(this).hide();
         let $box = $(this).closest('.text-box');
@@ -11,7 +11,7 @@ $(function () {
         $box.find('.text-hidden-message').text(short_text);
     });
 
-    /** Event listenere on click del pulsante Mostra meno di un testo troncato. */
+    /** Event listener on click of the button Show less of a truncated text. */
     $('.text-show-less').on('click', function () {
         $(this).hide();
         let $box = $(this).closest('.text-box');

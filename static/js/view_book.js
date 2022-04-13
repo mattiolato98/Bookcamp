@@ -1,6 +1,6 @@
 /**
- * Nasconde le informazioni del box.
- * @param {HTMLDivElement} $element Pulsante premuto dall'utente.
+ * Hides box information.
+ * @param {HTMLDivElement} $element User clicked button.
  */
 function hideBoxData($element) {
     $('#view-box-information').slideUp();
@@ -14,8 +14,8 @@ function hideBoxData($element) {
 }
 
 /**
- * Mostra le informazioni del box.
- * @param {HTMLDivElement} $element Pulsante premuto dall'utente.
+ * Shows box information.
+ * @param {HTMLDivElement} $element User clicked button.
  */
 function showBoxData($element) {
     $('#view-box-information').slideDown();
@@ -31,7 +31,7 @@ function showBoxData($element) {
 }
 
 $(function () {
-    /** Event listener on click del pulsante per lo show/hide delle informazioni del libro. */
+    /** Event listener on click of the button to show/hide book information. */
     $('.collapse-box-data, .expand-box-data').on('click', function () {
         if ($(this).hasClass('collapse-box-data'))
             hideBoxData($(this));

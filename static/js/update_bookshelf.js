@@ -1,7 +1,7 @@
 /**
- * Funzione chiamata onSuccess delle richieste Ajax di inserimento, modifica ed eliminazione di libri dal bookshelf.
- * @param data Dati ritornati da Ajax.
- * @param $row Row in cui l'utente ha azionato la richiesta.
+ * Function called by the onSuccess Ajax requests of insertion, update and deletion of books in the Bookshelf.
+ * @param data Ajax returned data.
+ * @param $row Row in which the user triggered the request.
  */
 function bookshelfOperationSuccess(data, $row) {
     let books_count = $('#books_count')
@@ -21,45 +21,45 @@ function bookshelfOperationSuccess(data, $row) {
 }
 
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip(); // Setup dei tooltip nella pagina.
+    $('[data-toggle="tooltip"]').tooltip(); // Setup Tooltip in the page
 
-    /** Event listener on click dell'icona delete. */
+    /** Event listener on click of the Delete icon. */
     $('.delete-book-icon').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxDeleteBook(pk, $(this));
     });
 
-    /** Event listener on click di Sposta in libri in lettura */
+        /** Event listener on click of Move to "books being read". */
     $('.move-book-reading').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxMoveBook(pk, "READING", $(this));
     });
 
-    /** Event listener on click di Sposta in libri letti */
+    /** Event listener on click of Move to "read books". */
     $('.move-book-read').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxMoveBook(pk, "READ", $(this));
     });
 
-    /** Event listener on click di Sposta in libri da leggere */
+    /** Event listener on click of Move to "must-read books". */
     $('.move-book-must-read').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxMoveBook(pk, "MUSTREAD", $(this));
     });
 
-    /** Event listener on click di Nuovo libro in lettura */
+    /** Event listener on click of New being read book. */
     $('.new-book-reading').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxNewBook(pk, "READING", $(this));
     });
 
-    /** Event listener on click di Nuovo libro letto */
+    /** Event listener on click of New read book. */
     $('.new-book-read').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxNewBook(pk, "READ", $(this));
     });
 
-    /** Event listener on click di Nuovo libro da leggere */
+    /** Event listener on click of New must-read book. */
     $('.new-book-must-read').on('click', function () {
         let pk = $(this).attr('data-post-id');
         ajaxNewBook(pk, "MUSTREAD", $(this));
