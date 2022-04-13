@@ -15,9 +15,6 @@ from comment_management.models import Topic, Bookmark
 
 
 class PlatformUser(AbstractUser):
-    """
-    Model contenente gli utenti.
-    """
     AbstractUser._meta.get_field('email')._unique = True
 
     # terms_of_service_acceptance = models.BooleanField(default=False)
@@ -31,8 +28,8 @@ class PlatformUser(AbstractUser):
     @property
     def has_profile(self):
         """
-        Verifica se l'utente ha un profilo associato.
-        :return: True se l'utente ha un profilo associato, False altrimenti.
+        Checks if the user has an associated profile.
+        :return: True if the user has an associated profile, False otherwise.
         """
         try:
             assert self.profile
@@ -43,56 +40,56 @@ class PlatformUser(AbstractUser):
     @property
     def topics_set(self):
         """
-        :return: Set dei topic dell'utente.
+        :return: User Topics set.
         """
         return self.topics.all()
 
     @property
     def topics_count(self):
         """
-        :return: Numero di topic dell'utente.
+        :return: User Topics number.
         """
         return self.topics.all().count()
 
     @property
     def comments_set(self):
         """
-        :return: Set dei commenti dell'utente.
+        :return: User Comments set.
         """
         return self.comments.all()
 
     @property
     def comments_set_group_by_book(self):
         """
-        :return: Set dei commenti dell'utente, raggruppati per libro. Dizionario del tipo {Book: [Lista di Comment]}
+        :return: User comments set, grouped by book.
+            Dictionary in the form {Book: [Comment list]}
         """
         comments = self.comments.all().order_by('-creation_date_time', 'topic__book')
 
-        # inizializza il dizionario con chiave: lista_vuota
         comments_group_by_book = {comment.topic.book: [] for comment in comments}
         for comment in comments:
-            comments_group_by_book[comment.topic.book].append(comment)  # riempie le liste con i commenti
+            comments_group_by_book[comment.topic.book].append(comment)
 
         return comments_group_by_book
 
     @property
     def comments_count(self):
         """
-        :return: Numero di commenti dell'utente.
+        :return: User Comments number.
         """
         return self.comments.all().count()
 
     @property
     def likes_count(self):
         """
-        :return: Numero di like messi dall'utente.
+        :return: Number of Likes put by the User.
         """
         return self.likes.all().count()
 
     @property
     def saved_topics_set(self):
         """
-        :return: Set di topic salvati dall'utente in ordine inverso di crazione (dall'ultimo salvato).
+        :return: User saved Topics set, ordered by inverse creation date.
         """
         bookmarks = self.bookmarks.all()
         return Topic.objects.filter(bookmarks__in=bookmarks).order_by('-bookmarks__creation_date_time')
@@ -100,7 +97,7 @@ class PlatformUser(AbstractUser):
     @property
     def liked_topics_set(self):
         """
-        :return: Set di topic a cui l'utente ha messo mi piace in ordine inverso di creazione (dall'ultimo piaciuto).
+        :return: Topics set liked by the User, ordered by inverse creation date.
         """
         likes = self.likes.all()
         return Topic.objects.filter(likes__in=likes).order_by('-likes__creation_date_time')
@@ -108,14 +105,14 @@ class PlatformUser(AbstractUser):
     @property
     def bookmarks_count(self):
         """
-        :return: Numero di bookmark dell'utente.
+        :return: User Bookmarks number.
         """
         return self.bookmarks.all().count()
 
     @staticmethod
     def get_popular_by_topics():
         """
-        :return: 5 utenti più popolari sulla base dei topic pubblicati.
+        :return: 5 most popular Users based on published Topics.
         """
         return PlatformUser.objects.all().annotate(num_topics=Count('topics')).order_by('-num_topics')\
             .exclude(profile=None)[:5]
@@ -123,7 +120,7 @@ class PlatformUser(AbstractUser):
     @staticmethod
     def get_popular_by_comments():
         """
-        :return: 5 utenti più popolari sulla base dei commenti pubblicati.
+        :return: 5 most popular Users based on published Comments.
         """
         return PlatformUser.objects.all().annotate(num_comments=Count('comments')).order_by('-num_comments')\
             .exclude(profile=None)[:5]
@@ -131,23 +128,19 @@ class PlatformUser(AbstractUser):
     @property
     def get_followed_profiles(self):
         """
-        :return: Lista dei profili seguiti dall'utente, in ordine decrescente di data di inizio follow
-         (da quello seguito per ultimo).
+        :return: List of Profile followed by the User, ordered by start follow date decreasing.
         """
         return self.followed_profiles.all().order_by('-follower_relations__starting_follow_date_time')
 
     # def clean(self):
     #     """
-    #     Verifica che siano stati accettati i Termini di servizio. In caso contrario nega la creazione dell'utente.
+    #     Checks that Terms of Service have been accepted. Otherwise it denies User creation.
     #     """
     #     if not self.terms_of_service_acceptance:
     #         raise ValidationError(_('È necessario accettare i termini di servizio per proseguire.'))
 
 
 class Profile(models.Model):
-    """
-    Model contenente i profili.
-    """
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     description = models.TextField(max_length=10000, blank=True, null=True)
@@ -166,24 +159,24 @@ class Profile(models.Model):
     @property
     def get_name(self):
         """
-        :return: Nome completo.
+        :return: Complete name.
         """
         return f"{self.first_name} {self.last_name}"
 
     @property
     def books_count(self):
         """
-        :return: Numero di libri nel bookshelf dell'utente.
+        :return: Number of books in the User Bookshelf.
         """
         return self.books.all().count()
 
     @property
     def books_set(self):
         """
-        :return: Elenco dei libri nel bookshelf dell'utente, risultati ordinati per:
-                    1. data di fine lettura decrescente
-                    2. data di inizio lettura decrescente
-                    3. data di ultima modifica decrescente
+        :return: Book list in the User Bookshelf, ordered by:
+                    1. Reading end date decreasing
+                    2. Reading start date decreasing
+                    3. Last update date decreasing
         """
         books = self.books.all()
         return Book.objects.filter(profile_books__in=books).\
@@ -193,11 +186,10 @@ class Profile(models.Model):
     @property
     def books_set_for_shelf(self):
         """
-        :return: Elenco dei libri nel booshelf dell'utente, escludendo quelli senza
-                    copertina e ordinando i risultati per:
-                        1. data di fine lettura decrescente
-                        2. data di inizio lettura decrescente
-                        3. data di ultima modifica decrescente
+        :return: Book list in the User Bookshelf, excluding those without cover. Results are ordered by:
+                    1. Reading end date decreasing
+                    2. Reading start date decreasing
+                    3. Last update date decreasing
         """
         books = self.books.all().exclude(book__cover_image_file__exact=Book._meta.get_field('cover_image_file').default)
         return Book.objects.filter(profile_books__in=books).\
@@ -221,9 +213,8 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Completa il salvataggio modificando l'immagine del profilo in modo da renderla un quadrato.
-        Se non è presente nessuna immagine setta quella di default (utile in caso di eliminazione
-        dell'immagine in fase di update).
+        Adjust profile picture size in order to make it a square.
+        Sets the default image if no one has been added.
         """
         super().save()
         if self.picture:
@@ -257,9 +248,6 @@ class Profile(models.Model):
 
 
 class FollowRelation(models.Model):
-    """
-    Model contenente la relazione di Follow tra un utente e un profilo.
-    """
     user_following = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="following_relations",
                                        on_delete=models.CASCADE)
     profile_followed = models.ForeignKey(Profile, related_name="follower_relations", on_delete=models.CASCADE)
@@ -270,12 +258,6 @@ class FollowRelation(models.Model):
 
 
 class ProfileBook(models.Model):
-    """
-    Model che contiene i libri di un profilo, nelle tre categorie:
-        - In lettura
-        - Letti
-        - Da leggere
-    """
     READING = 'READING'
     READ = 'READ'
     MUST_READ = 'MUSTREAD'
@@ -303,7 +285,7 @@ class ProfileBook(models.Model):
     @property
     def get_verbose_status(self):
         """
-        Status del libro human readable.
+        Book state human readable.
         """
         if self.status == 'READ':
             return _("Letto")
@@ -314,7 +296,7 @@ class ProfileBook(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Esegue una serie di verifiche sull'oggetto salvato ed effettua eventuali modifiche se necessario.
+        Final checks before save. Make some changes if necessary.
         """
         if self.status != 'READ':
             self.rating = None
@@ -338,7 +320,7 @@ class ProfileBook(models.Model):
 
     class Meta:
         """
-        Un utente può leggere un libro al più una volta.
+        A User can read a Book at most once.
         """
         unique_together = ["profile_owner", "book"]
         ordering = ['-last_update_date_time', ]
