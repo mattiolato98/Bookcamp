@@ -3,7 +3,7 @@ from django.http import HttpResponseForbidden
 
 def has_profile_only(func):
     """
-    Decoratore per negare l'accesso a utenti che NON hanno completato il proprio profilo.
+    Decorator to deny access to users who don't have completed their profile yet.
     """
     def check_and_call(request, *args, **kwargs):
         if not request.user.has_profile:
@@ -14,7 +14,7 @@ def has_profile_only(func):
 
 def has_not_profile_only(func):
     """
-    Decoratore per negare l'accesso a utenti che hanno già completato il proprio profilo.
+    Decorator to deny access to users who have already completed their profile.
     """
     def check_and_call(request, *args, **kwargs):
         if request.user.has_profile:
