@@ -1,10 +1,9 @@
-from django.conf import settings
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.views import LoginView
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
@@ -12,14 +11,13 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
-from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DeleteView, FormView
+from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView, FormView
 from django.utils.translation import gettext_lazy as _
 
+from books_base_folder.views import SearchMixin
 from book_management.decorators import profile_book_exists_only
 from user_management.forms import UpdateBookInfoCrispyForm
 from book_management.models import Book
-from books_base_folder.forms import SearchCrispyForm
-from books_base_folder.views import SearchMixin
 from user_management.decorators import has_profile_only, has_not_profile_only
 from user_management.forms import PlatformUserCreationForm, LoginForm, UpdateProfileCrispyForm, CreateProfileCrispyForm, \
     UpdateProfilePictureCrispyForm, SearchBookCrispyForm, UpdatePasswordCrispyForm
