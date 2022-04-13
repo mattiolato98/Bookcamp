@@ -5,7 +5,7 @@ from django.db.models import Q
 
 class EmailOrUsernameModelBackend(ModelBackend):
     """
-    Permette di eseguire il login sia con username che con email.
+    Allows to perform the Login either with the username or the email.
     """
     def authenticate(self, request, username=None, password=None, **kwargs):
         user_model = get_user_model()
