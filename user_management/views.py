@@ -28,8 +28,8 @@ account_activation_token = PasswordResetTokenGenerator()
 
 class UserCreateView(CreateView):
     """
-    View per la creazione di un utente.
-    Contiene il form PlatformUserCreationForm.
+    User CreateView.
+    It contains PlatformUserCreationForm.
     """
     form_class = PlatformUserCreationForm
     template_name = 'registration/registration.html'
@@ -37,7 +37,7 @@ class UserCreateView(CreateView):
 
     def form_valid(self, form):
         """
-        Completa l'inserimento disattivando l'utente e inviando una mail di conferma.
+        Completes the User creation, deactivating the User and sending a confirmation email.
         """
         response = super(UserCreateView, self).form_valid(form)
 
@@ -68,7 +68,7 @@ class UserCreateView(CreateView):
 
 def user_login_by_token(request, user_id_b64=None, user_token=None):
     """
-    Verifica che il token corrisponda a quello dell'utente che sta cercando di verifica la mail.
+    Checks if the token matches that of the User trying to verify the email.
     """
     try:
         uid = force_str(urlsafe_base64_decode(user_id_b64))
@@ -87,7 +87,7 @@ def user_login_by_token(request, user_id_b64=None, user_token=None):
 
 def verify_user_email(request, user_id_b64=None, user_token=None):
     """
-    :return: Pagina di email verificata con successo, se il token corrisponde a quello dell'utente.
+    :return: Email successfully verified page, if the token matches that of the User.
     """
     if not user_login_by_token(request, user_id_b64, user_token):
         message = _('Errore. Tentativo di validazione email per l\'utente {user} con token {token}')
@@ -97,8 +97,8 @@ def verify_user_email(request, user_id_b64=None, user_token=None):
 
 class LoginUserView(LoginView):
     """
-    View per il login.
-    Contiene il form LoginForm.
+    Login View.
+    It contains LoginForm.
     """
     form_class = LoginForm
     template_name = "registration/login.html"
@@ -106,36 +106,26 @@ class LoginUserView(LoginView):
 
 
 class EmailVerificationNeededView(TemplateView):
-    """
-    View per la visualizzazione della pagina 'Verifica email necessaria'.
-    """
     template_name = 'user_management/email_verification_needed.html'
 
 
 class EmailVerifiedView(LoginRequiredMixin, TemplateView):
-    """
-    View per la visualizzazione della pagina 'Email verificata con successo'.
-    """
     template_name = 'user_management/email_verified.html'
 
 
 class ReportView(LoginRequiredMixin, TemplateView):
-    """
-    View per la visualizzazione della pagina 'Report'.
-    """
     template_name = "comment_management/report.html"
 
 
 class UserProfileView(LoginRequiredMixin, TemplateView):
     """
-    View per la visualizzazione del profilo di un utente.
+    Profile TemplateView.
     """
     template_name = "user_management/user_profile.html"
 
     def dispatch(self, request, *args, **kwargs):
         """
-        Reindirizza a un template differente se l'utente richiesto non ha un profilo e a fare richiesta
-        è un utente non proprietario.
+        Redirects to a different page if the User has not a Profile and it is not the owner of the Profile.
         """
         user_obj = get_user_model().objects.get(pk=self.kwargs['pk'])
         if not user_obj.has_profile and not user_obj == self.request.user:
@@ -144,7 +134,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        Recupera le informazioni dell'utente e di tutti i libri.
+        Retrieves User info.
         """
         context = super(UserProfileView, self).get_context_data(**kwargs)
         context['user_for_profile'] = get_user_model().objects.get(pk=self.kwargs['pk'])
@@ -154,15 +144,15 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 @method_decorator([login_required, has_not_profile_only], name='dispatch')
 class CreateProfileView(CreateView):
     """
-    View per la creazione di un profilo
-    Contiene il form CreateProfileCrispyForm.
+    Profile CreateView.
+    It contains CreateProfileCrispyForm.
     """
     form_class = CreateProfileCrispyForm
     template_name = 'user_management/create_profile.html'
 
     def form_valid(self, form):
         """
-        Raccoglie le informazioni necessarie a completare l'inserimento.
+        Collects needed info to complete the Profile creation.
         """
         self.object = form.save(commit=False)
         self.object.user_id = self.request.user.pk
@@ -172,7 +162,7 @@ class CreateProfileView(CreateView):
 
     def get_success_url(self):
         """
-        :return: redirect verso la pagina 'view-profile' del profilo appena creato. 
+        :return: redirect towards the page 'view-profile' of the just created Profile.
         """
         return reverse_lazy('user_management:view-profile', kwargs={'pk': self.request.user.pk})
 
@@ -180,8 +170,8 @@ class CreateProfileView(CreateView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class UpdateProfileView(UpdateView):
     """
-    View per la modifica di un profilo.
-    Contiene il form UpdateProfileCrispyForm.
+    Profile UpdateView.
+    It contains UpdateProfileCrispyForm.
     """
     model = Profile
     form_class = UpdateProfileCrispyForm
@@ -189,13 +179,13 @@ class UpdateProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         """
-        Recupera l'oggetto profilo dell'utente che fa richiesta.
+        Retrieves Profile object of the requesting User.
         """
         return Profile.objects.get(pk=self.request.user.profile.pk)
 
     def get_success_url(self):
         """
-        :return: redirect verso la pagina 'view-profile' del profilo appena modificato.
+        :return: redirect towards the page 'view-profile' of the just created Profile.
         """
         return reverse_lazy('user_management:view-profile', kwargs={'pk': self.request.user.pk})
 
@@ -203,8 +193,8 @@ class UpdateProfileView(UpdateView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class UpdateProfilePictureView(UpdateView):
     """
-    View per la modifica dell'immagine del profilo.
-    Contiene il form UpdateProfilePictureCrispyForm.
+    Profile picture UpdateView.
+    It contains UpdateProfilePictureCrispyForm.
     """
     model = Profile
     form_class = UpdateProfilePictureCrispyForm
@@ -212,27 +202,27 @@ class UpdateProfilePictureView(UpdateView):
 
     def get_object(self, queryset=None):
         """
-        Recupera l'oggetto profilo dell'utente che fa richiesta.
+        Retrieves Profile object of the requesting User.
         """
         return Profile.objects.get(pk=self.request.user.profile.pk)
 
     def get_success_url(self):
         """
-        :return: redirect verso la pagina 'view-profile' del profilo appena modificato.
+        :return: redirect towards the page 'view-profile' of the just created Profile.
         """
         return reverse_lazy('user_management:view-profile', kwargs={'pk': self.request.user.pk})
 
 
 class ProfileSettingsView(LoginRequiredMixin, TemplateView):
     """
-    View per la visualizzazione delle impostazioni di un utente.
+    Profile settings TemplateView.
     """
     template_name = "user_management/user_settings.html"
 
 
 class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     """
-    View per la modifica della password dell'utente.
+    Password UpdateView.
     """
     model = get_user_model()
     template_name = "user_management/update_password.html"
@@ -240,13 +230,13 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         """
-        Recupera l'oggetto profilo dell'utente che fa richiesta.
+        Retrieves Profile object of the requesting User.
         """
         return get_user_model().objects.get(pk=self.request.user.pk)
 
     def post(self, request, *args, **kwargs):
         """
-        Gestisce redirezione in caso di pressione del pulsante 'cancel'.
+        Manages redirection when the cancel button is clicked.
         """
         if "cancel" in request.POST:
             url = reverse_lazy('user_management:view-profile', kwargs={'pk': self.request.user.pk})
@@ -255,7 +245,7 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         """
-        Verifica che la vecchia password inserita sia corretta.
+        Checks that the old password matches.
         """
         if self.request.user.check_password(form.cleaned_data['old_password']):
             return super(UpdatePasswordView, self).form_valid(form)
@@ -264,7 +254,7 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """
-        :return: redirect verso la pagina 'login' dell'utente che ha appena modificato la password.
+        :return: redirect towards the page 'login' of the User that has just updated the password.
         """
         return reverse_lazy('user_management:view-profile', kwargs={'pk': self.request.user.pk})
 
@@ -272,7 +262,7 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class FollowingUsersListView(TemplateView):
     """
-    View per la visualizzazione dell'elenco dei profili seguiti da un utente.
+    Following Users ListView.
     """
     model = Profile
     template_name = "user_management/following_users_list.html"
@@ -280,7 +270,7 @@ class FollowingUsersListView(TemplateView):
 
 class DeleteUserView(LoginRequiredMixin, DeleteView):
     """
-    View per l'eliminazione di un utente.
+    User DeleteView.
     """
     model = get_user_model()
     template_name = "user_management/delete_user.html"
@@ -288,14 +278,14 @@ class DeleteUserView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         """
-        Recupera l'oggetto utente dell'utente che fa richiesta.
+        Retrieves User object of the requesting User.
         """
         return get_user_model().objects.get(pk=self.request.user.pk)
 
 
 class DeleteProfileView(LoginRequiredMixin, DeleteView):
     """
-    View per l'eliminazione di un profilo.
+    Profile DeleteView.
     """
     model = Profile
     template_name = 'user_management/delete_profile.html'
@@ -303,21 +293,21 @@ class DeleteProfileView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         """
-        Recupera l'oggetto profilo dell'utente che fa richiesta.
+        Retrieves Profile object of the requesting User.
         """
         return Profile.objects.get(pk=self.request.user.profile.pk)
 
 
 class BookshelfView(LoginRequiredMixin, FormView):
     """
-    View per la visualizzazione di un bookshelf.
+    Bookshelf FormView.
     """
     template_name = "user_management/bookshelf/bookshelf.html"
     form_class = SearchBookCrispyForm
 
     def get_context_data(self, **kwargs):
         """
-        Recupera le informazioni dell'utente e dei suoi libri.
+        Retrieves User info.
         """
         context = super(BookshelfView, self).get_context_data(**kwargs)
         context['user_for_profile'] = get_user_model().objects.get(pk=self.kwargs['pk'])
@@ -325,8 +315,7 @@ class BookshelfView(LoginRequiredMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         """
-        Verifica che l'utente di cui si sta tentando di vedere il bookshelf, abbia completato il proprio profilo.
-        Alternativamente visualizza una pagina di errore.
+        Checks that the User has completed his Profile. Otherwise, shows an error page.
         """
         user_obj = get_user_model().objects.get(pk=self.kwargs['pk'])
         if not user_obj.has_profile:
@@ -337,16 +326,15 @@ class BookshelfView(LoginRequiredMixin, FormView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class BookshelfNewBook(SearchMixin, FormView):
     """
-    View per la visualizzazione di una lista di libri in base alla query di ricerca, con la possibilità di
-    inserirli nel bookshelf in una delle categorie.
+    Bookshelf book insertion View. It shows a list of books based on a search query.
     """
     template_name = "user_management/bookshelf/bookshelf_new_book.html"
     form_class = SearchBookCrispyForm
 
     def get_context_data(self, **kwargs):
         """
-        Aggiorna lo stile della barra di ricerca del Crispy Form e aggiunge la query come valore di default.
-        Filtra il context rimuovendo i libri già presenti nella libreria dell'utente che sta facendo richiesta.
+        Updates Crispy Form search bar style and adds the query as the default value.
+        Filters out the books already present in the requesting User Bookshelf.
         """
         context = super(BookshelfNewBook, self).get_context_data(**kwargs)
 
@@ -364,13 +352,13 @@ class BookshelfNewBook(SearchMixin, FormView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class UpdateReadingBooks(TemplateView):
     """
-    View per la visualizzazione della lista di libri in lettura, con la possibilità di spostarli o eliminarli.
+    Books being read list. It allows moving or deleting them.
     """
     template_name = "user_management/bookshelf/update_bookshelf.html"
 
     def get_context_data(self, **kwargs):
         """
-        Setta READING come type.
+        Set READING as type.
         """
         context = super(UpdateReadingBooks, self).get_context_data(**kwargs)
         context['type'] = "READING"
@@ -380,13 +368,13 @@ class UpdateReadingBooks(TemplateView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class UpdateReadBooks(TemplateView):
     """
-    View per la visualizzazione della lista di libri letti, con la possibilità di spostarli o eliminarli.
+    Books read list. It allows moving or deleting them.
     """
     template_name = "user_management/bookshelf/update_bookshelf.html"
 
     def get_context_data(self, **kwargs):
         """
-        Setta READ come type.
+        Set READ as type.
         """
         context = super(UpdateReadBooks, self).get_context_data(**kwargs)
         context['type'] = "READ"
@@ -396,13 +384,13 @@ class UpdateReadBooks(TemplateView):
 @method_decorator([login_required, has_profile_only], name='dispatch')
 class UpdateMustReadBooks(TemplateView):
     """
-    View per la visualizzazione della lista di libri da leggere, con la possibilità di spostarli o eliminarli.
+    Books to read list. It allows moving or deleting them.
     """
     template_name = "user_management/bookshelf/update_bookshelf.html"
 
     def get_context_data(self, **kwargs):
         """
-        Setta MUSTREAD come type.
+        Set MUSTREAD as type.
         """
         context = super(UpdateMustReadBooks, self).get_context_data(**kwargs)
         context['type'] = "MUSTREAD"
@@ -416,7 +404,7 @@ class UpdateBookInfo(UpdateView):
 
     def get_object(self, queryset=None):
         """
-        Recupera l'oggetto ProfileBook.
+        Retrieves ProfileBook object.
         """
         return ProfileBook.objects.get(profile_owner_id=self.request.user.profile.pk, book_id=self.kwargs['pk'])
 
@@ -439,7 +427,7 @@ class UpdateBookInfo(UpdateView):
 
     def form_valid(self, form):
         """
-        Verifica che i campi disabilitati non siano stati riempiti.
+        Checks that disabled fields have not been filled.
         """
         if self.get_object().status == 'READING' and \
                 (form.fields['end_reading_date'] is not None or form.fields['rating'] is not None):
@@ -467,12 +455,11 @@ class UpdateBookInfo(UpdateView):
 @csrf_protect
 def ajax_save_follow(request):
     """
-    Funzione chiamata da Ajax per salvare un follow.
-    Riceve la pk di un utente. Verifica se l'utente che fa richiesta è già presente nella lista di seguaci dell'utente
-    passato:
-        - in caso affermativo lo elimina (l'utente sta cercando di smettere di seguire)
-        - alternativamente lo aggiunge (l'utente sta cercando di iniziare a seguire)
-    :return: Booleano indicante se l'utente ha iniziato o smesso di seguire.
+    Ajax called function to save a Follow.
+    It receives a User pk. Checks if the requesting User is already present in the follower list of the other User:
+        - if so, it takes it off the follow
+        - otherwise it adds the follow
+    :return: Boolean value, True if the Follow has been added, False otherwise.
     """
     user_pk = request.POST.get('user')
     profile = Profile.objects.get(user_id=user_pk)
@@ -491,8 +478,8 @@ def ajax_save_follow(request):
 
 def ajax_check_username_exists(request):
     """
-    Funzione chiamata da Ajax per verifica la presenza di uno username tra le istanze.
-    :return: Booleano indicante se lo username esiste già.
+    Ajax called function to check if a username is present in the Database.
+    :return: True, if the Username already exists, False otherwise.
     """
     return JsonResponse({'exists': True}) \
         if get_user_model().objects.filter(username=request.GET.get('username')).exists() \
@@ -504,8 +491,10 @@ def ajax_check_username_exists(request):
 @csrf_protect
 def ajax_delete_book(request):
     """
-    Funzione chiamata da Ajax per eliminare un libro dal bookshelf.
-    :return: id del libro eliminato, status eliminato del libro.
+    Ajax called function to delete a Book from the Bookshelf.
+    :return:
+        - Deleted Book pk
+        - 'deleted' state
     """
     book_id = request.POST.get('book_primary_key')
     ProfileBook.objects.get(profile_owner=request.user.profile, book_id=book_id).delete()
@@ -521,9 +510,11 @@ def ajax_delete_book(request):
 @csrf_protect
 def ajax_move_book(request):
     """
-    Funzione chiamata da Ajax per spostare un libro nel bookshelf.
-    Necessario usare il metodo save e non update per modificare il rating.
-    :return: id del libro spostato, status attuale del libro (dove è stato spostato).
+    Ajax called function to move a Book in the Bookshelf.
+    It is necessary to use the save method instead of update to change the rating.
+    :return:
+        - Moved Book pk
+        - Book state
     """
     book_id = request.POST.get('book_primary_key')
     move_to = request.POST.get('move_to')
@@ -545,8 +536,8 @@ def ajax_move_book(request):
 @csrf_protect
 def ajax_new_book(request):
     """
-    Funzione chiamata da Ajax per inserire un nuovo libro nel bookshelf.
-    :return: id del libro inserito, status attuale del libro (dove è stato inserito).
+    Ajax called function to insert a new Book in the Bookshelf.
+    :return: Inserted Book state.
     """
     book_id = request.POST.get('book_primary_key')
     move_to = request.POST.get('move_to')
